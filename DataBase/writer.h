@@ -29,7 +29,7 @@ namespace db {
         void setTaskSize(int size) const;
 
     public slots:
-        void takeHash(int number, Record* record);
+        void takeHash(int number, Record* record) const;
 
     signals:
         void done();
@@ -41,19 +41,11 @@ namespace db {
         float _scale;
         QVector<Package*> _packages;
         int* _metaPackages;
-        int _recordWriten;
-        /*int*/
-        mutable QAtomicInt _totalToWrite;
     };
 
     inline
     int Writer::getBasePos() const {
         return _basePos;
-    }
-
-    inline
-    void Writer::setTaskSize(int size) const {
-        _totalToWrite.fetchAndStoreOrdered(size);
     }
 
     inline

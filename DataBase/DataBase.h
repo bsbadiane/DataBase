@@ -31,7 +31,7 @@ namespace db {
         qint64 _basePos;
         Reader*  _reader;
         Writer*  _writer;
-        NumberSystemHasher*    _hashers[threadCount];
+        NumberSystemHasher*    _hasher;
 
         void prepareDB(QFile* file, int numberOfPackages);
 

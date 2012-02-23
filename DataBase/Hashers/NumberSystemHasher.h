@@ -13,27 +13,28 @@
 namespace db {
     class Record;
     class DataBase;
+    class Writer;
 
     class NumberSystemHasher: public QObject {
     Q_OBJECT
     public:
-        NumberSystemHasher(int index, int tailPart, int degree);
+        NumberSystemHasher(int tailPart, int degree, Writer* writer);
         virtual ~NumberSystemHasher();
 
         int getDegree();
         int getTailPart();
 
     public slots:
-        void getHash(unsigned number, Record* record, int index);
+        void getHash(unsigned number, Record* record) const;
 
     signals:
         void giveHash(int hash, Record* record);
 
     private:
-        int _index;
-
         int _degree;
         int _tailPart;
+        const Writer* _writer;
+
         static const int BASE = 11;
         static const int _degreeTable[];
     };

@@ -51,21 +51,9 @@ namespace db {
             ++deg;
         }
         _writer = new Writer(file, checkNumber, hash, metaPackages, _basePos);
-        _reader = new Reader(src, _writer);
+        _hasher = new NumberSystemHasher(hash, deg, _writer);
+        _reader = new Reader(src, _writer, _hasher);
 
-        for (int i = 0; i < threadCount; ++i) {
-            _hashers[i] = new NumberSystemHasher(i, hash, deg);
-            connect(_reader, SIGNAL(findHash(unsigned, Record*, int)),
-                    _hashers[i], SLOT(getHash(unsigned, Record*, int)));
-            connect(_hashers[i], SIGNAL(giveHash(int, Record*)), _writer,
-                    SLOT(takeHash(int, Record*)));
-            /*QThread* thread = new QThread(this);
-             thread->start();
-             hasher->moveToThread(thread);*/
-            //hasher->start();
-        }
-        connect(_writer, SIGNAL(done()), _reader, SLOT(readRecords()));
-        connect(this, SIGNAL(build()), _reader, SLOT(readRecords()));
     }
 
     DataBase::~DataBase() {
@@ -74,36 +62,12 @@ namespace db {
 #endif
         delete _reader;
         delete _writer;
-        for (int i = 0; i < threadCount; ++i) {
-            delete _hashers[i];
-        }
+        delete _hasher;
+
     }
 
     void DataBase::buildDB() {
-        QThread* reader = new QThread(this);
-        QThread* writer = new QThread(this);
-        for (int i = 0; i < threadCount; ++i) {
-            QThread* hasher = new QThread(this);
-            _hashers[i]->moveToThread(hasher);
-            hasher->start();
-        }
-        reader->start();
-        writer->start();
-        _reader->moveToThread(reader);
-        _writer->moveToThread(writer);
-        emit build();
-        reader->wait();
-        writer->quit();
-        writer->wait();
-        for (int i = 0; i < threadCount; ++i) {
-            _hashers[i]->thread()->quit();
-        }for (int i = 0; i < threadCount; ++i) {
-            _hashers[i]->thread()->wait();
-        }
-        //_writer->start();
-        //_reader->start();
-        //_reader->wait();
-        //_writer->quit();
+        _reader->readRecords();
     }
 
     void DataBase::prepareDB(QFile* file, int numberOfPackages) {

@@ -40,7 +40,6 @@ namespace db {
             _packages[i] = new Package(_file, i, packNum / numberOfPackages,
                                        &metaPackages[i], this);
         }
-        _recordWriten = 0;
     }
 
     Writer::~Writer() {
@@ -52,7 +51,7 @@ namespace db {
 #endif
     }
 
-    void Writer::takeHash(int number, Record* record) {
+    void Writer::takeHash(int number, Record* record) const {
 #ifdef DEBUG
         qDebug() << "Writer emited";
 #endif
@@ -60,11 +59,6 @@ namespace db {
             number = _numberOfPackages - 1;
         }
         _packages[number]->insertRecord(record);
-        ++_recordWriten;
-        if (_recordWriten >= _totalToWrite) {
-            _recordWriten = 0;
-            emit done();
-        }
     }
 
 } /* namespace db */

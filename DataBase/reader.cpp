@@ -8,17 +8,18 @@
 #include "reader.h"
 #include "config.h"
 #include "DataBase.h"
+#include "writer.h"
+#include "Hashers/NumberSystemHasher.h"
 #include <qfile.h>
 #include <stdexcept>
 #ifdef DEBUG
 #include <qdebug.h>
-#include "writer.h"
 #endif
 
 namespace db {
 
-    Reader::Reader(QString fileName, Writer* writerCallBack) :
-            QObject(0), _writer(writerCallBack) {
+    Reader::Reader(QString fileName, Writer* writerCallBack, NumberSystemHasher* hasher) :
+            QObject(0), _writer(writerCallBack), _hasher(hasher) {
         //_writer = writerCallBack;
         _file = new QFile(fileName, this);
         _pos = 0;
@@ -36,13 +37,13 @@ namespace db {
     }
 
     void Reader::readRecords() {
+      while(true) {
         _file->unmap((uchar*)_recordArray);
 
         if (_frameBorder < _fileSize) {
             _pos = _frameBorder;
         } else {
-            thread()->quit();
-            return;
+            break;
         }
 
         int cap;
@@ -61,15 +62,12 @@ namespace db {
             throw new std::runtime_error("Cann't map a file.");
         }
 
-        int hasherIndex = 0;
         for (int i = 0; i < cap; ++i) {
             unsigned number = getNumber(_recordArray[i].ID);
-            emit findHash(number, &_recordArray[i], hasherIndex);
-            ++hasherIndex;
-            if (hasherIndex >= threadCount) {
-                hasherIndex = 0;
-            }
+            //emit findHash(number, &_recordArray[i], hasherIndex);
+            _hasher->getHash(number, &_recordArray[i]);
         }
+      }
     }
 
     unsigned Reader::getNumber(char string[10]) {
