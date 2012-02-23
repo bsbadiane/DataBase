@@ -18,7 +18,7 @@ namespace db {
     class NumberSystemHasher: public QObject {
     Q_OBJECT
     public:
-        NumberSystemHasher(int tailPart, int degree, Writer* writer);
+        NumberSystemHasher(int tailPart, int degree, QSharedPointer<Writer> writer);
         virtual ~NumberSystemHasher();
 
         int getDegree();
@@ -33,7 +33,7 @@ namespace db {
     private:
         int _degree;
         int _tailPart;
-        const Writer* _writer;
+        QSharedPointer<Writer> _writer;
 
         static const int BASE = 11;
         static const int _degreeTable[];

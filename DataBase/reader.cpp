@@ -18,7 +18,8 @@
 
 namespace db {
 
-    Reader::Reader(QString fileName, Writer* writerCallBack, NumberSystemHasher* hasher) :
+    Reader::Reader(QString fileName, QSharedPointer<Writer> writerCallBack,
+                   QSharedPointer<NumberSystemHasher> hasher) :
             QObject(0), _writer(writerCallBack), _hasher(hasher) {
         //_writer = writerCallBack;
         _file = new QFile(fileName, this);
@@ -37,37 +38,37 @@ namespace db {
     }
 
     void Reader::readRecords() {
-      while(true) {
-        _file->unmap((uchar*)_recordArray);
+        while (true) {
+            _file->unmap((uchar*)_recordArray);
 
-        if (_frameBorder < _fileSize) {
-            _pos = _frameBorder;
-        } else {
-            break;
-        }
+            if (_frameBorder < _fileSize) {
+                _pos = _frameBorder;
+            } else {
+                break;
+            }
 
-        int cap;
-        if (_fileSize >= (_pos + _windowSize)) {
-            _frameBorder = _pos + _windowSize;
-            cap = _windowCapacity;
-        } else {
-            _frameBorder = _fileSize;
-            cap = (_fileSize - _pos) / sizeof(Record);
-        }
-        //_writer->setTaskSize(cap);//TODO delete
+            int cap;
+            if (_fileSize >= (_pos + _windowSize)) {
+                _frameBorder = _pos + _windowSize;
+                cap = _windowCapacity;
+            } else {
+                _frameBorder = _fileSize;
+                cap = (_fileSize - _pos) / sizeof(Record);
+            }
+            //_writer->setTaskSize(cap);//TODO delete
 
-        _recordArray =
-                reinterpret_cast<Record*>(_file->map(_pos, _frameBorder - _pos));
-        if (_recordArray == NULL) {
-            throw new std::runtime_error("Cann't map a file.");
-        }
+            _recordArray = reinterpret_cast<Record*>(_file->map(
+                    _pos, _frameBorder - _pos));
+            if (_recordArray == NULL) {
+                throw new std::runtime_error("Cann't map a file.");
+            }
 
-        for (int i = 0; i < cap; ++i) {
-            unsigned number = getNumber(_recordArray[i].ID);
-            //emit findHash(number, &_recordArray[i], hasherIndex);
-            _hasher->getHash(number, &_recordArray[i]);
+            for (int i = 0; i < cap; ++i) {
+                unsigned number = getNumber(_recordArray[i].ID);
+                //emit findHash(number, &_recordArray[i], hasherIndex);
+                _hasher->getHash(number, &_recordArray[i]);
+            }
         }
-      }
     }
 
     unsigned Reader::getNumber(char string[10]) {
@@ -82,9 +83,9 @@ namespace db {
         return sum;
     }
 
-    /*void Reader::run() {
-        readRecords();
-        exec();
-    }*/
+/*void Reader::run() {
+ readRecords();
+ exec();
+ }*/
 
 } /* namespace db */

@@ -50,9 +50,11 @@ namespace db {
             hash *= 10;
             ++deg;
         }
-        _writer = new Writer(file, checkNumber, hash, metaPackages, _basePos);
-        _hasher = new NumberSystemHasher(hash, deg, _writer);
-        _reader = new Reader(src, _writer, _hasher);
+        _writer = QSharedPointer<Writer>(
+                new Writer(file, checkNumber, hash, metaPackages, _basePos));
+        _hasher = QSharedPointer<NumberSystemHasher>(
+                new NumberSystemHasher(hash, deg, _writer));
+        _reader = QSharedPointer<Reader>(new Reader(src, _writer, _hasher));
 
     }
 
@@ -60,10 +62,6 @@ namespace db {
 #ifdef DEBUG
         qDebug() << "Destroying DB";
 #endif
-        delete _reader;
-        delete _writer;
-        delete _hasher;
-
     }
 
     void DataBase::buildDB() {
@@ -84,7 +82,7 @@ namespace db {
             }
         }
         _basePos = sizeof(int) * (numberOfPackages + 1);
-        file->resize(_basePos + 1200000 * sizeof(Record));
+        file->resize(_basePos + packNum * sizeof(Record));
         file->flush();
     }
 

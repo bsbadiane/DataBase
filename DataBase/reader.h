@@ -11,6 +11,7 @@
 #include "Record.h"
 #include <qthread.h>
 #include <qfile.h>
+#include <QtCore>
 
 namespace db {
     class Record;
@@ -19,13 +20,14 @@ namespace db {
     class NumberSystemHasher;
 
     class Reader: public QObject {
-        Q_OBJECT
+    Q_OBJECT
     public:
-        Reader(QString fileName, Writer* writer, NumberSystemHasher* hasher);
+        Reader(QString fileName, QSharedPointer<Writer> writer,
+               QSharedPointer<NumberSystemHasher> hasher);
         virtual ~Reader();
 
-        static const int    _windowCapacity = 1000000;
-        static const qint64 _windowSize = _windowCapacity*sizeof(Record);
+        static const int _windowCapacity = 1000000;
+        static const qint64 _windowSize = _windowCapacity * sizeof(Record);
 
         //virtual void run();
 
@@ -40,9 +42,9 @@ namespace db {
         qint64 _pos;
         qint64 _fileSize;
         Record* _recordArray;
-        qint64  _frameBorder;
-        const Writer* _writer;
-        const NumberSystemHasher* _hasher;
+        qint64 _frameBorder;
+        QSharedPointer<Writer> _writer;
+        QSharedPointer<NumberSystemHasher> _hasher;
 
         unsigned getNumber(char string[9]);
     };

@@ -11,6 +11,7 @@
 #include "config.h"
 #include <qobject.h>
 #include <qfile.h>
+#include <QtCore>
 
 namespace db {
     class Reader;
@@ -29,9 +30,9 @@ namespace db {
 
     private:
         qint64 _basePos;
-        Reader*  _reader;
-        Writer*  _writer;
-        NumberSystemHasher*    _hasher;
+        QSharedPointer<Reader>  _reader;
+        QSharedPointer<Writer>  _writer;
+        QSharedPointer<NumberSystemHasher>    _hasher;
 
         void prepareDB(QFile* file, int numberOfPackages);
 
