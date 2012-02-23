@@ -9,6 +9,7 @@
 #include "../DataBase.h"
 #include "../writer.h"
 #include <stdexcept>
+#include <memory>
 #ifdef DEBUG
 #include <qdebug.h>
 #endif
