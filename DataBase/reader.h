@@ -17,13 +17,14 @@ namespace db {
     class Record;
     class DataBase;
     class Writer;
+    class Hasher;
     class NumberSystemHasher;
 
     class Reader: public QObject {
     Q_OBJECT
     public:
         Reader(QString fileName, QSharedPointer<Writer> writer,
-               QSharedPointer<NumberSystemHasher> hasher);
+               QSharedPointer<Hasher> hasher);
         virtual ~Reader();
 
         static const int _windowCapacity = 1000000;
@@ -44,7 +45,7 @@ namespace db {
         Record* _recordArray;
         qint64 _frameBorder;
         QSharedPointer<Writer> _writer;
-        QSharedPointer<NumberSystemHasher> _hasher;
+        QSharedPointer<Hasher> _hasher;
 
         unsigned getNumber(char string[9]);
     };

@@ -8,6 +8,7 @@
 #ifndef NUMBERSYSTEMHASHER_H_
 #define NUMBERSYSTEMHASHER_H_
 
+#include "Hasher.h"
 #include <QtCore>
 
 namespace db {
@@ -15,7 +16,7 @@ namespace db {
     class DataBase;
     class Writer;
 
-    class NumberSystemHasher: public QObject {
+    class NumberSystemHasher: public Hasher {
     Q_OBJECT
     public:
         NumberSystemHasher(int tailPart, int degree, QSharedPointer<Writer> writer);
@@ -25,7 +26,7 @@ namespace db {
         int getTailPart();
 
     public slots:
-        void getHash(unsigned number, Record* record) const;
+        virtual void getHash(unsigned number, Record* record) const;
 
     signals:
         void giveHash(int hash, Record* record);

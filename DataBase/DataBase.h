@@ -17,6 +17,7 @@ namespace db {
     class Reader;
     class Writer;
     class NumberSystemHasher;
+    class Hasher;
 
     class DataBase: public QObject {
     Q_OBJECT
@@ -32,7 +33,7 @@ namespace db {
         qint64 _basePos;
         QSharedPointer<Reader>  _reader;
         QSharedPointer<Writer>  _writer;
-        QSharedPointer<NumberSystemHasher>    _hasher;
+        QSharedPointer<Hasher>    _hasher;
 
         void prepareDB(QFile* file, int numberOfPackages);
 

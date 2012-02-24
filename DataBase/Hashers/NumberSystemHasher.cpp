@@ -24,8 +24,7 @@ namespace db {
                                                     BASE * BASE * BASE * BASE * BASE};
 
     NumberSystemHasher::NumberSystemHasher(int tailPart, int degree,
-                                           QSharedPointer<Writer> writer) :
-            QObject(0) {
+                                           QSharedPointer<Writer> writer) {
         _writer = writer;
         _tailPart = tailPart;
         _degree = degree;

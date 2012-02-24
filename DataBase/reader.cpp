@@ -9,6 +9,7 @@
 #include "config.h"
 #include "DataBase.h"
 #include "writer.h"
+#include "Hashers/Hasher.h"
 #include "Hashers/NumberSystemHasher.h"
 #include <qfile.h>
 #include <stdexcept>
@@ -19,7 +20,7 @@
 namespace db {
 
     Reader::Reader(QString fileName, QSharedPointer<Writer> writerCallBack,
-                   QSharedPointer<NumberSystemHasher> hasher) :
+                   QSharedPointer<Hasher> hasher) :
             QObject(0), _writer(writerCallBack), _hasher(hasher) {
         //_writer = writerCallBack;
         _file = new QFile(fileName, this);
