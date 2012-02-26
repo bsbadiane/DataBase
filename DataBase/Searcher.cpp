@@ -16,7 +16,6 @@ namespace db {
             _writer(writer), _hasher(hasher) {}
 
     Searcher::~Searcher() {
-        // TODO Auto-generated destructor stub
     }
 
     Record* Searcher::search(char ID[10]) {

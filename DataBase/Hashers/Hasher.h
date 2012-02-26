@@ -34,10 +34,10 @@ namespace db {
          quint64 val = ~static_cast<quint64>(string[i]) & ~0xf0000000;
          sum += val;
          }*/
-        int shIft = 0;
+        int shift = 0;
         for (int i = 0; i < 9; ++i) {
-            sum += static_cast<quint64>(string[i]) << 6 * i;        //FIXME
-            shIft += _shiftBase;
+            sum += static_cast<quint64>(string[i]) << shift;
+            shift += _shiftBase;
         }
         return sum;
     }

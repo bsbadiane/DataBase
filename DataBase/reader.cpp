@@ -58,7 +58,6 @@ namespace db {
                 _frameBorder = _fileSize;
                 cap = (_fileSize - _pos) / sizeof(Record);
             }
-            //_writer->setTaskSize(cap);//TODO delete
 
             _recordArray = reinterpret_cast<Record*>(_file->map(
                     _pos, _frameBorder - _pos));
