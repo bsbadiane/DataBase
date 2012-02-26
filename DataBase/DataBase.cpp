@@ -53,8 +53,7 @@ namespace db {
         }
         _writer = QSharedPointer<Writer>(
                 new Writer(file, checkNumber, hash, metaPackages, _basePos));
-        _hasher = QSharedPointer<Hasher>(
-                new NumberSystemHasher(hash, deg, _writer));
+        _hasher = QSharedPointer<Hasher>(new NumberSystemHasher(hash, deg));
         _reader = QSharedPointer<Reader>(new Reader(src, _writer, _hasher));
 
     }

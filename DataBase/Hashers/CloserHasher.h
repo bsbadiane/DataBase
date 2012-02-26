@@ -17,14 +17,12 @@ namespace db {
     class CloserHasher: public db::Hasher {
         Q_OBJECT
     public:
-        CloserHasher(int tailPart, int degree,
-                     QSharedPointer<Writer> writer);
+        CloserHasher(int tailPart, int degree);
         virtual ~CloserHasher();
 
-        virtual void getHash(quint64 number, Record* record) const;
+        virtual quint64 getHash(quint64 number) const;
 
     private:
-        QSharedPointer<Writer> _writer;
         int     _tailPart;
         int     _degree;
 

@@ -70,7 +70,8 @@ namespace db {
                 qDebug() << number;
 #endif
                 //emit findHash(number, &_recordArray[i], hasherIndex);
-                _hasher->getHash(number, &_recordArray[i]);
+                int hash = _hasher->getHash(number);
+                _writer->insertPackage(hash, &_recordArray[i]);
             }
         }
     }

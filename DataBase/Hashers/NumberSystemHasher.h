@@ -19,14 +19,14 @@ namespace db {
     class NumberSystemHasher: public Hasher {
     Q_OBJECT
     public:
-        NumberSystemHasher(int tailPart, int degree, QSharedPointer<Writer> writer);
+        NumberSystemHasher(int tailPart, int degree);
         virtual ~NumberSystemHasher();
 
         int getDegree();
         int getTailPart();
 
     public slots:
-        virtual void getHash(quint64 number, Record* record) const;
+        virtual quint64 getHash(quint64 number) const;
 
     signals:
         void giveHash(int hash, Record* record);
@@ -34,7 +34,6 @@ namespace db {
     private:
         int _degree;
         int _tailPart;
-        QSharedPointer<Writer> _writer;
 
         static const int BASE = 11;
         static const int _degreeTable[];

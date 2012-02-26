@@ -18,9 +18,7 @@ namespace db {
                                               BASE * BASE * BASE * BASE,
                                               BASE * BASE * BASE * BASE * BASE};
 
-    CloserHasher::CloserHasher(int tailPart, int degree,
-                               QSharedPointer<Writer> writer) {
-        _writer = writer;
+    CloserHasher::CloserHasher(int tailPart, int degree) {
         _tailPart = tailPart;
         _degree = degree;
     }
@@ -28,11 +26,7 @@ namespace db {
     CloserHasher::~CloserHasher() {
     }
 
-    void CloserHasher::getHash(quint64 number, Record* record) const {
-        if (record == NULL) {
-                    throw new std::runtime_error(
-                            "Null pointer in NumberSystemHasher::getHash");
-                }
+    quint64 CloserHasher::getHash(quint64 number) const {
 
         ushort* numbers = new ushort[_degree * 3];
         for (int i = 0; i < _degree * 3; ++i) {
@@ -54,7 +48,7 @@ namespace db {
         //заворачиваем цифры
         int hightPart = _degree*3 - 1;
         int lowPart   = _degree - 1;
-        int sum = 0;
+        quint64 sum = 0;
         for (int i = 0; i < _degree; ++i) {
             numbers[_degree + i] += numbers[lowPart -i] + numbers[hightPart - i];
             numbers[_degree + i] %= 10;
@@ -62,8 +56,8 @@ namespace db {
 
         }
 
-        _writer->takeHash(sum, record);
-
+        return sum;
+        //_writer->insertPackage(sum, record);
     }
 
 } /* namespace db */

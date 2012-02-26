@@ -30,7 +30,8 @@ namespace db {
         //void setTaskSize(int size) const;
 
     public slots:
-        void takeHash(int number, Record* record) const;
+        void insertPackage(int number, Record* record) const;
+        Record* searchPackage(int number, char ID[10]) const;
 
     signals:
         void done();
@@ -43,6 +44,8 @@ namespace db {
         QVector<Package*> _packages;
         int* _metaPackages;
     };
+
+    //////////////////////////////////
 
     inline
     int Writer::getBasePos() const {
@@ -64,5 +67,19 @@ namespace db {
         return _packages[currentNumber + 1]->searchRecord(ID);
     }
 
+    inline
+    void Writer::insertPackage(int number, Record *record) const {
+        if ((number *= _scale) >= _numberOfPackages) {
+            number = _numberOfPackages - 1;
+        }
+        _packages[number]->insertRecord(record);
+    }
+
+    inline Record* Writer::searchPackage(int number, char ID[10]) const {
+        if ((number *= _scale) >= _numberOfPackages) {
+            number = _numberOfPackages - 1;
+        }
+        return _packages[number]->searchRecord(ID);
+    }
 } /* namespace db */
 #endif /* WRITER_H_ */

@@ -48,11 +48,5 @@ namespace db {
         }
     }
 
-    void Writer::takeHash(int number, Record *record) const {
-        if ((number *= _scale) >= _numberOfPackages) {
-            number = _numberOfPackages - 1;
-        }
-        _packages[number]->insertRecord(record);
-    }
 
 } /* namespace db */

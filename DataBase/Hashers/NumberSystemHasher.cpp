@@ -23,9 +23,7 @@ namespace db {
                                                     BASE * BASE * BASE * BASE,
                                                     BASE * BASE * BASE * BASE * BASE};
 
-    NumberSystemHasher::NumberSystemHasher(int tailPart, int degree,
-                                           QSharedPointer<Writer> writer) {
-        _writer = writer;
+    NumberSystemHasher::NumberSystemHasher(int tailPart, int degree) {
         _tailPart = tailPart;
         _degree = degree;
     }
@@ -36,11 +34,7 @@ namespace db {
 #endif
     }
 
-    void NumberSystemHasher::getHash(quint64 number, Record* record) const {
-        if (record == NULL) {
-            throw new std::runtime_error(
-                    "Null pointer in NumberSystemHasher::getHash");
-        }
+    quint64 NumberSystemHasher::getHash(quint64 number) const {
 #ifdef DEBUG
         qDebug() << "Hasher emited";
 #endif
@@ -57,9 +51,9 @@ namespace db {
             number = div;
         }
 
-        sum %= _tailPart;
+        return sum % _tailPart;
         //emit giveHash(sum, record);
-        _writer->takeHash(sum, record);
+        //_writer->takeHash(sum, record);
     }
 
 } /* namespace db */

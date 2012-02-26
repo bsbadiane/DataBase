@@ -15,10 +15,9 @@ namespace db {
     class Hasher: public QObject {
         Q_OBJECT
     public:
-        Hasher(QObject* parent= 0): QObject(parent){}
         virtual ~Hasher(){}
 
-        virtual void getHash(quint64 number, Record* record) const = 0;
+        virtual quint64 getHash(quint64 number) const = 0;
     };
 
 } /* namespace db */
