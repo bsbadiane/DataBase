@@ -20,8 +20,8 @@ namespace db {
     class Hasher;
     class NumberSystemHasher;
 
-    class Reader: public QObject {
-    Q_OBJECT
+    class Reader{//: public QObject {
+    //Q_OBJECT
     public:
         Reader(QString fileName, QSharedPointer<Writer> writer,
                QSharedPointer<Hasher> hasher);
@@ -30,13 +30,7 @@ namespace db {
         static const int _windowCapacity = 1000000;
         static const qint64 _windowSize = _windowCapacity * sizeof(Record);
 
-        //virtual void run();
-
-    public slots:
         void readRecords();
-
-    signals:
-        void findHash(unsigned number, Record* record, int index);
 
     private:
         QFile* _file;
@@ -47,9 +41,6 @@ namespace db {
         QSharedPointer<Writer> _writer;
         QSharedPointer<Hasher> _hasher;
 
-        quint64 getNumber(char string[9]);
-
-        static const int _shiftBase = 6;
     };
 
 } /* namespace db */

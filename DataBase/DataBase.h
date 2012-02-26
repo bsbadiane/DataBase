@@ -18,20 +18,21 @@ namespace db {
     class Writer;
     class NumberSystemHasher;
     class Hasher;
+    class Record;
 
     class DataBase: public QObject {
     Q_OBJECT
     public:
-        DataBase(QString src, QString db, int numberOfPackages, QObject* parent = 0);
+        DataBase(QString db, int numberOfPackages, QObject* parent = 0);
         virtual ~DataBase();
 
-        void buildDB();
+        void buildDB(QString src);
+        Record* searchByID(char ID[10]);
 
         //int getBasePos();
 
     private:
         qint64 _basePos;
-        QSharedPointer<Reader>  _reader;
         QSharedPointer<Writer>  _writer;
         QSharedPointer<Hasher>    _hasher;
 

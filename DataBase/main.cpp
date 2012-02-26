@@ -9,10 +9,10 @@ int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 
     try {
-        db::DataBase base("/storage/base.dat", "/storage/nydb.db", 100);
+        db::DataBase base("/storage/nydb.db", 100);
         QTime timer;
         timer.start();
-        base.buildDB();
+        base.buildDB("/storage/base.dat");
         qDebug() << timer.elapsed();
     } catch (std::exception* e) {
         qDebug() << e->what();

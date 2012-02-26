@@ -15,7 +15,7 @@
 
 namespace db {
 
-    DataBase::DataBase(QString src, QString db, int numberOfPackages,
+    DataBase::DataBase(QString db, int numberOfPackages,
                        QObject* parent) :
             QObject(parent) {
 
@@ -54,8 +54,6 @@ namespace db {
         _writer = QSharedPointer<Writer>(
                 new Writer(file, checkNumber, hash, metaPackages, _basePos));
         _hasher = QSharedPointer<Hasher>(new NumberSystemHasher(hash, deg));
-        _reader = QSharedPointer<Reader>(new Reader(src, _writer, _hasher));
-
     }
 
     DataBase::~DataBase() {
@@ -64,8 +62,9 @@ namespace db {
 #endif
     }
 
-    void DataBase::buildDB() {
-        _reader->readRecords();
+    void DataBase::buildDB(QString src) {
+        QScopedPointer<Reader> reader(new Reader(src, _writer, _hasher));
+        reader->readRecords();
     }
 
     void DataBase::prepareDB(QFile* file, int numberOfPackages) {

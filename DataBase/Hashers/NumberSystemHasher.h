@@ -17,7 +17,7 @@ namespace db {
     class Writer;
 
     class NumberSystemHasher: public Hasher {
-    Q_OBJECT
+    //Q_OBJECT
     public:
         NumberSystemHasher(int tailPart, int degree);
         virtual ~NumberSystemHasher();
@@ -25,11 +25,8 @@ namespace db {
         int getDegree();
         int getTailPart();
 
-    public slots:
         virtual quint64 getHash(quint64 number) const;
 
-    signals:
-        void giveHash(int hash, Record* record);
 
     private:
         int _degree;

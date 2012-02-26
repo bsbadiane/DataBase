@@ -15,7 +15,7 @@ namespace db {
     class Writer;
 
     class CloserHasher: public db::Hasher {
-        Q_OBJECT
+        //Q_OBJECT
     public:
         CloserHasher(int tailPart, int degree);
         virtual ~CloserHasher();

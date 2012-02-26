@@ -21,9 +21,9 @@ namespace db {
 
     Reader::Reader(QString fileName, QSharedPointer<Writer> writerCallBack,
                    QSharedPointer<Hasher> hasher) :
-            QObject(0), _writer(writerCallBack), _hasher(hasher) {
+             _writer(writerCallBack), _hasher(hasher) {
         //_writer = writerCallBack;
-        _file = new QFile(fileName, this);
+        _file = new QFile(fileName);
         _pos = 0;
         _fileSize = _file->size();
         _recordArray = NULL;
@@ -36,6 +36,8 @@ namespace db {
 #ifdef DEBUG
         qDebug() << "Reader destroyed";
 #endif
+        _file->close();
+        delete _file;
     }
 
     void Reader::readRecords() {
@@ -65,7 +67,7 @@ namespace db {
             }
 
             for (int i = 0; i < cap; ++i) {
-                quint64 number = getNumber(_recordArray[i].ID);
+                quint64 number = _hasher->getNumber(_recordArray[i].ID);
 #ifdef DEBUG2
                 qDebug() << number;
 #endif
@@ -74,23 +76,6 @@ namespace db {
                 _writer->insertPackage(hash, &_recordArray[i]);
             }
         }
-    }
-
-     quint64 Reader::getNumber(char string[10]) {
-        quint64 sum = 0;
-        /*for (int i = 0; i < 9; i += 2) {
-            sum += string[i];
-        }
-        for (int i = 1; i < 9; i += 2) {
-            quint64 val = ~static_cast<quint64>(string[i]) & ~0xf0000000;
-            sum += val;
-        }*/
-        int shIft = 0;
-        for (int i = 0; i < 9; ++i) {
-            sum += static_cast<quint64>(string[i]) << 6*i;//FIXME
-            shIft += _shiftBase;
-        }
-        return sum;
     }
 
 /*void Reader::run() {

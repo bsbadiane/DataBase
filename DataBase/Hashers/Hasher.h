@@ -12,13 +12,35 @@
 namespace db {
     class Record;
 
-    class Hasher: public QObject {
-        Q_OBJECT
+    class Hasher {        //: public QObject {
+        //Q_OBJECT
     public:
-        virtual ~Hasher(){}
+        virtual ~Hasher() {
+        }
 
         virtual quint64 getHash(quint64 number) const = 0;
+        virtual quint64 getNumber(char string[9]);
+
+    protected:
+        static const int _shiftBase = 6;
     };
+
+    inline quint64 Hasher::getNumber(char string[10]) {
+        quint64 sum = 0;
+        /*for (int i = 0; i < 9; i += 2) {
+         sum += string[i];
+         }
+         for (int i = 1; i < 9; i += 2) {
+         quint64 val = ~static_cast<quint64>(string[i]) & ~0xf0000000;
+         sum += val;
+         }*/
+        int shIft = 0;
+        for (int i = 0; i < 9; ++i) {
+            sum += static_cast<quint64>(string[i]) << 6 * i;        //FIXME
+            shIft += _shiftBase;
+        }
+        return sum;
+    }
 
 } /* namespace db */
 #endif /* HASHER_H_ */

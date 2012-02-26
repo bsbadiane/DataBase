@@ -19,13 +19,12 @@ namespace db {
 
     class Writer: public QObject {
     Q_OBJECT
+    friend class Package;
     public:
         Writer(QFile* file, int numberOfPackages, int hashDegree,
                int* metaPackages, int basePos);
         virtual ~Writer();
 
-        void insertToNextPackage(int currentNumber, Record* record);
-        Record* searchInNextPackage(int currentNumber, char ID[10]);
         int getBasePos() const;
         //void setTaskSize(int size) const;
 
@@ -43,6 +42,9 @@ namespace db {
         float _scale;
         QVector<Package*> _packages;
         int* _metaPackages;
+
+        void insertToNextPackage(int currentNumber, Record* record);
+        Record* searchInNextPackage(int currentNumber, char ID[10]);
     };
 
     //////////////////////////////////
