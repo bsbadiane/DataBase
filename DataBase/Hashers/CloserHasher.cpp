@@ -7,6 +7,7 @@
 
 #include "CloserHasher.h"
 #include "../writer.h"
+#include <stdexcept>
 
 namespace db {
 
@@ -28,6 +29,11 @@ namespace db {
     }
 
     void CloserHasher::getHash(quint64 number, Record* record) const {
+        if (record == NULL) {
+                    throw new std::runtime_error(
+                            "Null pointer in NumberSystemHasher::getHash");
+                }
+
         ushort* numbers = new ushort[_degree * 3];
         for (int i = 0; i < _degree * 3; ++i) {
             quint64 div = number / 10;
