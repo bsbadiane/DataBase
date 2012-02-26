@@ -24,9 +24,10 @@ namespace db {
                int* metaPackages, int basePos);
         virtual ~Writer();
 
-        void searchNextPackage(int currentNumber, Record* record);
+        void insertToNextPackage(int currentNumber, Record* record);
+        Record* searchInNextPackage(int currentNumber, char ID[10]);
         int getBasePos() const;
-        void setTaskSize(int size) const;
+        //void setTaskSize(int size) const;
 
     public slots:
         void takeHash(int number, Record* record) const;
@@ -49,11 +50,18 @@ namespace db {
     }
 
     inline
-    void Writer::searchNextPackage(int currentNumber, Record* record) {
+    void Writer::insertToNextPackage(int currentNumber, Record* record) {
         if (currentNumber + 1 >= _numberOfPackages) {
             currentNumber = -1;
         }
         _packages[currentNumber + 1]->insertRecord(record, false);
+    }
+
+    inline Record *Writer::searchInNextPackage(int currentNumber, char ID[10]) {
+        if (currentNumber + 1 >= _numberOfPackages) {
+            currentNumber = -1;
+        }
+        return _packages[currentNumber + 1]->searchRecord(ID);
     }
 
 } /* namespace db */

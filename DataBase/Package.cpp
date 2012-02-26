@@ -31,7 +31,7 @@ namespace db {
         _filled = filled;
         _capacity = capacity;
         _size = capacity * sizeof(Record);
-        _begin = number * _size;
+        _begin = number * _size + _parent->getBasePos();
     }
 
     Package::~Package() {
@@ -46,9 +46,7 @@ namespace db {
 
         bool emptyRecordExist = *_filled < _capacity;
         if (emptyRecordExist) {
-            _file->seek(
-                    _parent->getBasePos() + _begin
-                            + (*_filled) * sizeof(Record));
+            _file->seek(_begin + (*_filled) * sizeof(Record));
             if (_file->write((char*)record, sizeof(Record)) != sizeof(Record)) {
                 throw new std::out_of_range("Cann't write to DB.");
             }
@@ -57,9 +55,28 @@ namespace db {
                 throw new std::out_of_range("Package overflow.");
             }
         } else {
-            _parent->searchNextPackage(_number, record);
+            _parent->insertToNextPackage(_number, record);
         }
 
+    }
+
+    Record* Package::searchRecord(char ID[10]) {
+        Record* records = reinterpret_cast<Record*>(_file->map(_begin, _size));
+        if (records == NULL) {
+            throw new std::runtime_error(
+                    "Cann't map file in Package::insertRecord");
+        }
+
+        bool last = *_filled < _capacity;
+
+        for (int i = 0; i < _capacity; ++i) {
+            if (strncmp(records[i].ID, ID, 9) == 0) {
+                return new Record(records[i]);
+            }
+        }
+
+        _file->unmap((uchar*)records);
+        return last ? NULL : _parent->searchInNextPackage(_number, ID);
     }
 
 } /* namespace db */

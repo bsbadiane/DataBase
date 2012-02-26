@@ -19,6 +19,7 @@ namespace db {
         virtual ~Package();
 
         void insertRecord(Record* record, bool isNativePackage = true);
+        Record* searchRecord(char ID[10]);
 
         //static void setPackagesSize(qint64 capacity);
 

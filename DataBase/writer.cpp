@@ -46,15 +46,9 @@ namespace db {
         for (int i = 0; i < _packages.size(); ++i) {
             delete _packages[i];
         }
-#ifdef DEBUG
-        qDebug() << "Writer destroyed";
-#endif
     }
 
-    void Writer::takeHash(int number, Record* record) const {
-#ifdef DEBUG
-        qDebug() << "Writer emited";
-#endif
+    void Writer::takeHash(int number, Record *record) const {
         if ((number *= _scale) >= _numberOfPackages) {
             number = _numberOfPackages - 1;
         }
