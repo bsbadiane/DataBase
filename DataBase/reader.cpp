@@ -5,8 +5,8 @@
  *      Author: night
  */
 
-#include "reader.h"
 #include "config.h"
+#include "reader.h"
 #include "DataBase.h"
 #include "writer.h"
 #include "Hashers/Hasher.h"
@@ -65,21 +65,29 @@ namespace db {
             }
 
             for (int i = 0; i < cap; ++i) {
-                unsigned number = getNumber(_recordArray[i].ID);
+                quint64 number = getNumber(_recordArray[i].ID);
+#ifdef DEBUG2
+                qDebug() << number;
+#endif
                 //emit findHash(number, &_recordArray[i], hasherIndex);
                 _hasher->getHash(number, &_recordArray[i]);
             }
         }
     }
 
-    unsigned Reader::getNumber(char string[10]) {
-        unsigned sum = 0;
-        for (int i = 0; i < 9; i += 2) {
+     quint64 Reader::getNumber(char string[10]) {
+        quint64 sum = 0;
+        /*for (int i = 0; i < 9; i += 2) {
             sum += string[i];
         }
         for (int i = 1; i < 9; i += 2) {
-            unsigned short val = ~static_cast<unsigned short>(string[i]);
+            quint64 val = ~static_cast<quint64>(string[i]) & ~0xf0000000;
             sum += val;
+        }*/
+        int shIft = 0;
+        for (int i = 0; i < 9; ++i) {
+            sum += static_cast<quint64>(string[i]) << 6*i;//FIXME
+            shIft += _shiftBase;
         }
         return sum;
     }

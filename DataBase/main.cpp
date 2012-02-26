@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 
     try {
-        db::DataBase base("/storage/base.dat", "/storage/nydb.db", 20);
+        db::DataBase base("/storage/base.dat", "/storage/nydb.db", 100);
         QTime timer;
         timer.start();
         base.buildDB();

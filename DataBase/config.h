@@ -2,7 +2,8 @@
 #define CONFIG_H
 
 //#define DEBUG
-#ifdef DEBUG
+#define DEBUG2
+#if defined(DEBUG) ||defined(DEBUG2)
 #include <qdebug.h>
 #endif
 

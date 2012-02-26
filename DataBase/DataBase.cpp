@@ -5,11 +5,12 @@
  *      Author: night
  */
 
+#include "config.h"
 #include "reader.h"
 #include "writer.h"
 #include "Hashers/NumberSystemHasher.h"
 #include "DataBase.h"
-#include "config.h"
+#include "Hashers/CloserHasher.h"
 #include <stdexcept>
 
 namespace db {

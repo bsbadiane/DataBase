@@ -36,7 +36,7 @@ namespace db {
 #endif
     }
 
-    void NumberSystemHasher::getHash(unsigned number, Record* record) const {
+    void NumberSystemHasher::getHash(quint64 number, Record* record) const {
         if (record == NULL) {
             throw new std::runtime_error(
                     "Null pointer in NumberSystemHasher::getHash");
@@ -47,8 +47,8 @@ namespace db {
 
         int sum = 0;
         for (int i = 0; i < 6; ++i) {
-            unsigned div = number / 10;
-            unsigned a = number - div * 10;        //TODO more effective
+            quint64 div = number / 10;
+            quint64 a = number - div * 10;        //TODO more effective
             sum += _degreeTable[i] * a;
 
             if (div == 0) {

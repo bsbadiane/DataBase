@@ -9,6 +9,7 @@
 #define CLOSERHASHER_H_
 
 #include "Hasher.h"
+#include <QtCore>
 
 namespace db {
     class Writer;
@@ -18,16 +19,16 @@ namespace db {
     public:
         CloserHasher(int tailPart, int degree,
                      QSharedPointer<Writer> writer);
-        virtual ~CloserHasher(){}
+        virtual ~CloserHasher();
 
-        virtual void getHash(unsigned number, Record* record) const;
+        virtual void getHash(quint64 number, Record* record) const;
 
     private:
-        Writer* _writer;
+        QSharedPointer<Writer> _writer;
         int     _tailPart;
         int     _degree;
 
-        static const int BASE = 11;
+        static const int BASE = 10;
         static const int _degreeTable[];
     };
 

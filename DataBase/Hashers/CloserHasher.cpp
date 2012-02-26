@@ -6,6 +6,7 @@
  */
 
 #include "CloserHasher.h"
+#include "../writer.h"
 
 namespace db {
 
@@ -26,14 +27,18 @@ namespace db {
     CloserHasher::~CloserHasher() {
     }
 
-    void CloserHasher::getHash(unsigned number, Record* record) const {
-        int* numbers = new int[_degree * 3](0);
-        for (int i = _degree * 3 - 1; i >= 0; --i) {
-            unsigned div = number / 10;
-            unsigned a = number - div * 10;        //TODO more effective
+    void CloserHasher::getHash(quint64 number, Record* record) const {
+        ushort* numbers = new ushort[_degree * 3];
+        for (int i = 0; i < _degree * 3; ++i) {
+            quint64 div = number / 10;
+            quint64 a = number - div * 10;        //TODO more effective
             numbers[i] = a;
 
             if (div == 0) {
+                //остаток заполняем нулями
+                for (int j = i+1; j < _degree*3; ++j) {
+                    numbers[j] = 0;
+                }
                 break;
             }
 

@@ -47,7 +47,9 @@ namespace db {
         QSharedPointer<Writer> _writer;
         QSharedPointer<Hasher> _hasher;
 
-        unsigned getNumber(char string[9]);
+        quint64 getNumber(char string[9]);
+
+        static const int _shiftBase = 6;
     };
 
 } /* namespace db */

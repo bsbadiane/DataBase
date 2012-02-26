@@ -26,7 +26,7 @@ namespace db {
         int getTailPart();
 
     public slots:
-        virtual void getHash(unsigned number, Record* record) const;
+        virtual void getHash(quint64 number, Record* record) const;
 
     signals:
         void giveHash(int hash, Record* record);
