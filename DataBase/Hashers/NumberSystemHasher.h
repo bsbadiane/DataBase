@@ -19,6 +19,8 @@ namespace db {
     class NumberSystemHasher: public Hasher {
     //Q_OBJECT
     public:
+    	static Hasher* build(int tailPart, int degree);
+
         NumberSystemHasher(int tailPart, int degree);
         virtual ~NumberSystemHasher();
 
@@ -44,6 +46,11 @@ namespace db {
     inline
     int NumberSystemHasher::getTailPart() {
         return _tailPart;
+    }
+
+    inline
+    Hasher* NumberSystemHasher::build(int tailPart, int degree) {
+    	return new NumberSystemHasher(tailPart, degree);
     }
 
 } /* namespace db */

@@ -72,6 +72,9 @@ namespace db {
 #endif
                 //emit findHash(number, &_recordArray[i], hasherIndex);
                 int hash = _hasher->getHash(number);
+#ifdef DEBUG2
+                qDebug() << hash;
+#endif
                 _writer->insertPackage(hash, &_recordArray[i]);
             }
         }

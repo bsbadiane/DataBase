@@ -7,7 +7,9 @@
 
 #ifndef HASHER_H_
 #define HASHER_H_
-#include <qobject.h>
+#include "../Record.h"
+#include <QtCore>
+//#include <qobject.h>
 
 namespace db {
     class Record;
@@ -15,17 +17,19 @@ namespace db {
     class Hasher {        //: public QObject {
         //Q_OBJECT
     public:
+    	typedef Hasher* (*Constructor)(int tailPart, int degree);
+
         virtual ~Hasher() {
         }
 
         virtual quint64 getHash(quint64 number) const = 0;
-        virtual quint64 getNumber(char string[9]);
+        virtual quint64 getNumber(char string[Record::ID_SIZE]);
 
     protected:
         static const int _shiftBase = 6;
     };
 
-    inline quint64 Hasher::getNumber(char string[10]) {
+    inline quint64 Hasher::getNumber(char string[Record::ID_SIZE]) {
         quint64 sum = 0;
         /*for (int i = 0; i < 9; i += 2) {
          sum += string[i];
@@ -35,7 +39,7 @@ namespace db {
          sum += val;
          }*/
         int shift = 0;
-        for (int i = 0; i < 9; ++i) {
+        for (int i = 0; i < Record::ID_SIZE-1; ++i) {
             sum += static_cast<quint64>(string[i]) << shift;
             shift += _shiftBase;
         }

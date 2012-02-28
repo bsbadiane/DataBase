@@ -24,6 +24,7 @@ namespace db {
         //static void setPackagesSize(qint64 capacity);
 
     private:
+        Record* _base;
         Writer* _parent;
         QFile*  _file;
         qint64  _begin;

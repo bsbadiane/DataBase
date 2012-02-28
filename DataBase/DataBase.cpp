@@ -15,7 +15,7 @@
 
 namespace db {
 
-    DataBase::DataBase(QString db, int numberOfPackages,
+    DataBase::DataBase(QString db, int numberOfPackages, Hasher::Constructor hashBuilder,
                        QObject* parent) :
             QObject(parent) {
 
@@ -24,7 +24,7 @@ namespace db {
             throw new std::runtime_error("Cann't open db.");
         }
         int checkNumber = 0;
-        if (file->read((char*)&checkNumber, sizeof(checkNumber))
+        if (file->read((char*)&checkNumber, (qint64)sizeof(checkNumber))
                 != sizeof(checkNumber)) {
             prepareDB(file, numberOfPackages);
             checkNumber = numberOfPackages;
@@ -36,7 +36,7 @@ namespace db {
         }
 
         int* metaPackages = reinterpret_cast<int*>(file->map(
-                sizeof(int), sizeof(int) * checkNumber));
+        		(qint64)sizeof(int), (qint64)sizeof(int) * checkNumber));
         if (metaPackages == NULL) {
             throw new std::runtime_error("Cann't map DB.");
         }
@@ -53,7 +53,7 @@ namespace db {
         }
         _writer = QSharedPointer<Writer>(
                 new Writer(file, checkNumber, hash, metaPackages, _basePos));
-        _hasher = QSharedPointer<Hasher>(new NumberSystemHasher(hash, deg));
+        _hasher = QSharedPointer<Hasher>(hashBuilder(hash, deg));
     }
 
     DataBase::~DataBase() {
@@ -68,20 +68,33 @@ namespace db {
     }
 
     void DataBase::prepareDB(QFile* file, int numberOfPackages) {
-        if (file->write((char*)&numberOfPackages, sizeof(numberOfPackages))
+        _basePos = sizeof(int) * (numberOfPackages + 1);
+        file->resize((qint64)(_basePos + packNum * sizeof(Record)));
+        int* metaTable = reinterpret_cast<int*>(
+        		file->map(0, (qint64)(numberOfPackages*sizeof(Record))+1) );
+        if (metaTable == NULL) {
+        	throw new std::runtime_error(
+        	                    "Can't write to DB in DataBase::prepareDB");
+        }
+        metaTable[0] = numberOfPackages;
+        for (int i = 1; i <= numberOfPackages; ++i) {
+			metaTable[i] = 0;
+		}
+        file->unmap((uchar*)metaTable);
+
+        /*if (file->write((char*)&numberOfPackages, (qint64)sizeof(numberOfPackages))
                 != sizeof(numberOfPackages)) {
             throw new std::runtime_error(
                     "Can't write to DB in DataBase::prepareDB");
         }
         int zero = 0;
         for (int i = 0; i < numberOfPackages; ++i) {
-            if (file->write((char*)&zero, sizeof(zero)) != sizeof(zero)) {
+            if (file->write((char*)&zero, (qint64)sizeof(zero)) != sizeof(zero)) {
                 throw new std::runtime_error(
                         "Can't write to DB in DataBase::prepareDB");
             }
-        }
-        _basePos = sizeof(int) * (numberOfPackages + 1);
-        file->resize(_basePos + packNum * sizeof(Record));
+        }*/
+
         file->flush();
     }
 

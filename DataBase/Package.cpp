@@ -32,9 +32,11 @@ namespace db {
         _capacity = capacity;
         _size = capacity * sizeof(Record);
         _begin = number * _size + _parent->getBasePos();
+        _base = reinterpret_cast<Record*>(_file->map(_begin, _size));
     }
 
     Package::~Package() {
+    	_file->unmap((uchar*)_base);
     }
 
     void Package::insertRecord(Record *record, bool isNativePackage) {
@@ -46,10 +48,11 @@ namespace db {
 
         bool emptyRecordExist = *_filled < _capacity;
         if (emptyRecordExist) {
-            _file->seek(_begin + (*_filled) * sizeof(Record));
-            if (_file->write((char*)record, sizeof(Record)) != sizeof(Record)) {
+            /*_file->seek((quint64)(_begin + (*_filled) * sizeof(Record)));
+            if (_file->write((char*)record, (quint64)sizeof(Record)) != sizeof(Record)) {
                 throw new std::out_of_range("Cann't write to DB.");
-            }
+            }*/
+        	_base[*_filled] = *record;
             (*_filled)++;
             if ((*_filled) == INT_MAX) {
                 throw new std::out_of_range("Package overflow.");
@@ -70,7 +73,7 @@ namespace db {
         bool last = *_filled < _capacity;
 
         for (int i = 0; i < _capacity; ++i) {
-            if (strncmp(records[i].ID, ID, 9) == 0) {
+            if (strncmp(records[i].ID, ID, Record::ID_SIZE-1) == 0) {
                 return new Record(records[i]);
             }
         }

@@ -9,6 +9,7 @@
 #define DATABASE_H_
 
 #include "config.h"
+#include "Hashers/Hasher.h"
 #include <qobject.h>
 #include <qfile.h>
 #include <QtCore>
@@ -16,14 +17,13 @@
 namespace db {
     class Reader;
     class Writer;
-    class NumberSystemHasher;
-    class Hasher;
     class Record;
 
     class DataBase: public QObject {
     Q_OBJECT
     public:
-        DataBase(QString db, int numberOfPackages, QObject* parent = 0);
+        DataBase(QString db, int numberOfPackages, Hasher::Constructor hashBuilder,
+        		QObject* parent = 0);
         virtual ~DataBase();
 
         void buildDB(QString src);

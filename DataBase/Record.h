@@ -12,8 +12,9 @@ namespace db {
 
     struct Record {
         const static int STRING_SIZE = 12;
+        const static int ID_SIZE  = 7;
 
-        char ID[10];
+        char ID[ID_SIZE];
         char string[STRING_SIZE];
         int number;
     };

@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <io.h>
 #include <iostream>
 #include <string>
 
-const int dlina = 10;
+const int dlina = 7;
 const int razmer = 12;
 struct Record 
 {
-	char ID[10];
+	char ID[7];
 	char string[razmer];
 	int number;
 };
@@ -39,7 +38,7 @@ int main()
 			element.ID[0]=j[0];
 			
 		}
-		for (int k = 1; k< 10; k++)
+		for (int k = 1; k< 7; k++)
 		{
 			if (j[k]=='9')
 			{
@@ -50,16 +49,16 @@ int main()
 				element.ID[k]=j[k];
 			}
 		}
-		element.ID[9] = 0;
+		element.ID[6] = 0;
 
-    	//формирования рандомного текста
+    	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 		for (int j = 0; j<razmer-1; j++)
 		{
 			element.string[j]= names[rand()%26];
 		}
 		element.string[razmer-1] = 0;
 		
-		//формирование рандомного значения
+		//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		element.number = rand() % 10000;
 /*
 

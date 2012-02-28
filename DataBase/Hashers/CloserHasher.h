@@ -17,6 +17,8 @@ namespace db {
     class CloserHasher: public db::Hasher {
         //Q_OBJECT
     public:
+    	static Hasher* build(int tailPart, int degree);
+
         CloserHasher(int tailPart, int degree);
         virtual ~CloserHasher();
 
@@ -29,6 +31,11 @@ namespace db {
         static const int BASE = 10;
         static const int _degreeTable[];
     };
+
+    inline
+    Hasher* CloserHasher::build(int tailPart, int degree) {
+    	return new CloserHasher(tailPart, degree);
+    }
 
 } /* namespace db */
 #endif /* CLOSERHASHER_H_ */
