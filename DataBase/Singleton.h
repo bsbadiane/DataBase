@@ -15,14 +15,12 @@ namespace db {
 
 	template<class T>
 	class Singleton {
-		static T* _instance;
-		static QMutex* _mutex;
 	public:
 		typedef T instanceType;
 
 		static instanceType& instance() {
 			if (_instance == NULL) {
-				QMutexLocker lock(_mutex);
+				QMutexLocker lock(&_mutex);
 				if (_instance == NULL) {
 					create();
 				}
@@ -32,6 +30,9 @@ namespace db {
 		}
 
 	private:
+		static T* _instance;
+		static QMutex _mutex;
+
 		static void create() {
 			static instanceType instance;
 			_instance = &instance;
@@ -42,7 +43,7 @@ namespace db {
 	template<class T>
 		T* Singleton<T>::_instance = NULL;
 	template<class T>
-		QMutex* Singleton<T>::_mutex = new QMutex();
+		QMutex Singleton<T>::_mutex;
 }
 
 #endif /* SINGLETON_H_ */

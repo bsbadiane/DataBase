@@ -21,8 +21,7 @@ namespace db {
     Q_OBJECT
     friend class Package;
     public:
-        Writer(QFile* file, int numberOfPackages, int hashDegree,
-               int* metaPackages, int basePos);
+        Writer(QFile* file, int numberOfPackages, int hashDegree, int basePos);
         virtual ~Writer();
 
         int getBasePos() const;

@@ -22,7 +22,7 @@ namespace db {
 
         _file = file;
         if (!_file->isOpen()) {
-            if (_file->open(QFile::ReadWrite)) {
+            if (!_file->open(QFile::ReadWrite)) {
                 throw new std::runtime_error(
                         "Cann't open file in Package::Package");
             }
@@ -31,13 +31,16 @@ namespace db {
         _parent = parent;
         _filled = filled;
         _capacity = capacity;
-        _size = capacity * sizeof(Record);
-        _begin = number * _size + _parent->getBasePos();
-        _base = reinterpret_cast<Record*>(_file->map(_begin, _size));
+        int size = capacity * sizeof(Record);
+        int begin = number * size + _parent->getBasePos();
+        _base = reinterpret_cast<Record*>(_file->map(begin, size));
     }
 
     Package::~Package() {
     	_file->unmap((uchar*)_base);
+#ifdef MEM_DEBUG
+    	qDebug() << "Package destroyed";
+#endif
     }
 
     void Package::insertRecord(Record *record, bool isNativePackage) {
@@ -66,7 +69,9 @@ namespace db {
     }
 
     Record* Package::searchRecord(char ID[10]) {
-        Record* records = reinterpret_cast<Record*>(_file->map(_begin, _size));
+    	Q_UNUSED(ID);
+    	return NULL;
+        /*Record* records = reinterpret_cast<Record*>(_file->map(_begin, _size));
         if (records == NULL) {
             throw new std::runtime_error(
                     "Cann't map file in Package::insertRecord");
@@ -81,7 +86,7 @@ namespace db {
         }
 
         _file->unmap((uchar*)records);
-        return last ? NULL : _parent->searchInNextPackage(_number, ID);
+        return last ? NULL : _parent->searchInNextPackage(_number, ID);*/
     }
 
 } /* namespace db */

@@ -24,6 +24,9 @@ namespace db {
     }
 
     CloserHasher::~CloserHasher() {
+#ifdef MEM_DEBUG
+    	qDebug() << "Hasher destroyed";
+#endif
     }
 
     quint64 CloserHasher::getHash(quint64 number) const {

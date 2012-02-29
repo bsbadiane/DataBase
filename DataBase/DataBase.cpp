@@ -38,11 +38,11 @@ namespace db {
             throw new std::invalid_argument("Invalid number of packages");
         }
 
-        int* metaPackages = reinterpret_cast<int*>(file->map(
+        /*int* metaPackages = reinterpret_cast<int*>(file->map(
         		(qint64)sizeof(int), (qint64)sizeof(int) * checkNumber));
         if (metaPackages == NULL) {
             throw new std::runtime_error("Cann't map DB.");
-        }
+        }*/
 #ifdef DEBUG
         for (int i = 0; i < checkNumber; ++i) {
             qDebug() << metaPackages[i];
@@ -55,19 +55,19 @@ namespace db {
             ++deg;
         }
         _writer = QSharedPointer<Writer>(
-                new Writer(file, checkNumber, hash, metaPackages, _basePos));
+                new Writer(file, checkNumber, hash, _basePos));
         _hasher = QSharedPointer<Hasher>(hashBuilder(hash, deg));
     }
 
     DataBase::~DataBase() {
-#ifdef DEBUG
-        qDebug() << "Destroying DB";
+#ifdef MEM_DEBUG
+    	qDebug() << "DataBase destroyed";
 #endif
     }
 
     void DataBase::buildDB(QString src) {
-        QScopedPointer<Reader> reader(new Reader(src, _writer, _hasher));
-        reader->readRecords();
+    	Reader reader(src, _writer, _hasher);
+        reader.readRecords();
     }
 
     void DataBase::prepareDB(QFile* file, int numberOfPackages) {

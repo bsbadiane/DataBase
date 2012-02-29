@@ -33,8 +33,8 @@ namespace db {
         }
     }
     Reader::~Reader() {
-#ifdef DEBUG
-        qDebug() << "Reader destroyed";
+#ifdef MEM_DEBUG
+    	qDebug() << "Reader destroyed";
 #endif
         _file->close();
         delete _file;

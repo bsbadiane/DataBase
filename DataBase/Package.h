@@ -27,11 +27,11 @@ namespace db {
         Record* _base;
         Writer* _parent;
         QFile*  _file;
-        qint64  _begin;
+        //qint64  _begin;
         int     _number;
         int*    _filled;
 
-        qint64 _size;
+        //qint64 _size;
         int    _capacity;
     };
 

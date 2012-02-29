@@ -118,6 +118,9 @@ void TProfiler::setSteps() {
 }
 
 TProfiler::~TProfiler() {
+#ifdef MEM_DEBUG
+    	qDebug() << "Profiler destroyed";
+#endif
 }
 
 void TProfiler::logResult(int number, int hasher) {

@@ -29,8 +29,8 @@ namespace db {
     }
 
     NumberSystemHasher::~NumberSystemHasher() {
-#ifdef DEBUG
-        qDebug() << "Hasher destroyed";
+#ifdef MEM_DEBUG
+    	qDebug() << "Hasher destroyed";
 #endif
     }
 
