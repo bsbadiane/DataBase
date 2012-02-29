@@ -60,7 +60,7 @@ void TProfiler::profile() {
 		}
 
 	}
-#ifdef DEBUG3
+#ifdef DEBUG4
 	qDebug() << _ro[0];
 	qDebug() << _ro[1];
 	qDebug();

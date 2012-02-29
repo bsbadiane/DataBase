@@ -19,6 +19,9 @@ namespace db {
     public:
     	typedef Hasher* (*Constructor)(int tailPart, int degree);
 
+    	Hasher() {
+    		qsrand(time(NULL));
+    	}
         virtual ~Hasher() {
         }
 

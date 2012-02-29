@@ -28,7 +28,7 @@ int main()
 	for (long i = 0; i< 1000000;i++)
 	{
 		Record element ;
-		if (j[0]=='9')
+		if (j[0]=='Z')
 		{
 			j[0] = '0';
 			j[1]++;
@@ -40,7 +40,7 @@ int main()
 		}
 		for (int k = 1; k< 7; k++)
 		{
-			if (j[k]=='9')
+			if (j[k]=='Z')
 			{
 				j[k] = '0';
 				j[k+1]++;
