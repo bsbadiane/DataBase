@@ -7,6 +7,7 @@
 
 #include "Package.h"
 #include "writer.h"
+#include "Profiler.h"
 #include <stdexcept>
 #include <cstddef>
 #include <climits>
@@ -53,6 +54,7 @@ namespace db {
                 throw new std::out_of_range("Cann't write to DB.");
             }*/
         	_base[*_filled] = *record;
+        	Profiler::instance().insertedInNative();
             (*_filled)++;
             if ((*_filled) == INT_MAX) {
                 throw new std::out_of_range("Package overflow.");

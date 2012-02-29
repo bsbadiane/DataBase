@@ -18,6 +18,9 @@ namespace db {
     DataBase::DataBase(QString db, int numberOfPackages, Hasher::Constructor hashBuilder,
                        QObject* parent) :
             QObject(parent) {
+#ifdef DEBUG3
+    	qDebug() << db << numberOfPackages;
+#endif
 
         QFile* file = new QFile(db);
         if (!file->open(QFile::ReadWrite)) {

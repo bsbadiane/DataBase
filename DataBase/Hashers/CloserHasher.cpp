@@ -55,6 +55,7 @@ namespace db {
             sum += numbers[_degree + i] * _degreeTable[i];
 
         }
+        delete[] numbers;
 
         return sum;
         //_writer->insertPackage(sum, record);

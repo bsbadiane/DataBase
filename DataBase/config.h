@@ -3,7 +3,8 @@
 
 //#define DEBUG
 //#define DEBUG2
-#if defined(DEBUG) ||defined(DEBUG2)
+//#define DEBUG3
+#if defined(DEBUG) ||defined(DEBUG2) || defined (DEBUG3)
 #include <qdebug.h>
 #endif
 

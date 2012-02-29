@@ -1,7 +1,9 @@
 TEMPLATE = app
 TARGET = DataBase
 QT += core
-HEADERS += Searcher.h \
+HEADERS += Profiler.h \
+    Singleton.h \
+    Searcher.h \
     Hashers/CloserHasher.h \
     Hashers/Hasher.h \
     config.h \
@@ -11,7 +13,8 @@ HEADERS += Searcher.h \
     Hashers/NumberSystemHasher.h \
     Record.h \
     DataBase.h
-SOURCES += Searcher.cpp \
+SOURCES += Profiler.cpp \
+    Searcher.cpp \
     Hashers/CloserHasher.cpp \
     Package.cpp \
     writer.cpp \
