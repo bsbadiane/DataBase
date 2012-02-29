@@ -4,8 +4,9 @@
 //#define DEBUG
 //#define DEBUG2
 //#define DEBUG3
-#define MEM_DEBUG
-#if defined(DEBUG) ||defined(DEBUG2) || defined (DEBUG3) || defined (MEM_DEBUG)
+//#define MEM_DEBUG
+#define DEBUG4
+#if defined(DEBUG) ||defined(DEBUG2) || defined (DEBUG3) || defined (MEM_DEBUG) ||defined(DEBUG4)
 #include <qdebug.h>
 #endif
 

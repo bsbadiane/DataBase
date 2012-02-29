@@ -28,9 +28,9 @@ namespace db {
             throw new std::runtime_error("Cann't map DB.");
         }
         _numberOfPackages = numberOfPackages;
-        _basePos = basePos;
-        _scale = static_cast<float>(numberOfPackages)		//FIXME
-                / static_cast<float>(hashDegree);
+        //_basePos = basePos;
+        _scale = static_cast<float>(numberOfPackages-1)
+                / static_cast<float>(hashDegree-1);
 
         _file->setParent(this);
         if (!_file->isOpen()) {
@@ -40,9 +40,23 @@ namespace db {
             }
         }
 
-        for (int i = 0; i < _packages.size(); ++i) {
-            _packages[i] = new Package(_file, i, packNum / numberOfPackages,
-                                       &_metaPackages[i], this);
+        _capacity = packNum / numberOfPackages;
+        int size = _capacity*sizeof(Record);
+
+        _addr = reinterpret_cast<Record*>(_file->map(basePos,
+        		size*numberOfPackages));
+
+        if (_addr == NULL) {
+        	throw new std::runtime_error("Cann't map data");
+        }
+
+        //qDebug() << _file->size() << ", " << numberOfPackages*size;
+        //return;
+
+        int pack = 0;
+        for (int i = 0; i < _capacity*numberOfPackages; i+=_capacity) {
+            _packages[pack] = new Package(&_addr[i], pack, this);
+            ++pack;
         }
     }
 
@@ -51,6 +65,7 @@ namespace db {
             delete _packages[i];
         }
         _file->unmap((uchar*)_metaPackages);
+        _file->unmap((uchar*)_addr);
 #ifdef MEM_DEBUG
     	qDebug() << "Writer destroyed";
 #endif

@@ -63,7 +63,7 @@ private:
 
 } /* namespace db */
 
-#ifdef DEBUG3
+#ifdef DEBUG4
 QDebug& operator << (QDebug& stream, db::TProfiler::Point point);
 #endif
 

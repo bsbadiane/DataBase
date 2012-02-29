@@ -47,6 +47,7 @@ void TProfiler::profile() {
 		for (int numberOfPackages = _steps[i].begin;
 				numberOfPackages < _steps[i].end;
 				numberOfPackages += _steps[i].step) {
+			qDebug() << numberOfPackages;
 			for (int hasher = 0; hasher < 2; ++hasher) {
 				DataBase base(
 						_hashDir[hasher].absolutePath() + "/"
@@ -159,7 +160,7 @@ void TProfiler::flushLogs() {
 
 }
 
-#ifdef DEBUG3
+#ifdef DEBUG4
 QDebug& operator << (QDebug& stream, db::TProfiler::Point point) {
 	stream << point.x << ", " << point.y;
 	return stream;

@@ -15,10 +15,10 @@ namespace db {
 
     class Package {
     public:
-        Package(QFile* file, int number, int capacity, int* filled, Writer* parent);
+        Package(Record* addr, int number, Writer* parent);
         virtual ~Package();
 
-        void insertRecord(Record* record, bool isNativePackage = true);
+        bool insertRecord(Record* record, bool isNativePackage = true);
         Record* searchRecord(char ID[10]);
 
         //static void setPackagesSize(qint64 capacity);
@@ -26,13 +26,13 @@ namespace db {
     private:
         Record* _base;
         Writer* _parent;
-        QFile*  _file;
+        //QFile*  _file;
         //qint64  _begin;
         int     _number;
-        int*    _filled;
+        //int*    _filled;
 
         //qint64 _size;
-        int    _capacity;
+        //int    _capacity;
     };
 
     /*inline void Package::setPackagesSize(qint64 capacity) {

@@ -14,56 +14,45 @@
 
 namespace db {
 
-    Package::Package(QFile *file, int number, int capacity, int* filled,
-                     Writer *parent) {
-        if (file == NULL || parent == NULL || filled == NULL) {
+    Package::Package(Record* addr, int number, Writer *parent) {
+        if (addr == NULL || parent == NULL) {
             throw new std::runtime_error("Null pointer in Package::Package");
         }
 
-        _file = file;
-        if (!_file->isOpen()) {
-            if (!_file->open(QFile::ReadWrite)) {
-                throw new std::runtime_error(
-                        "Cann't open file in Package::Package");
-            }
-        }
         _number = number;
         _parent = parent;
-        _filled = filled;
-        _capacity = capacity;
-        int size = capacity * sizeof(Record);
-        int begin = number * size + _parent->getBasePos();
-        _base = reinterpret_cast<Record*>(_file->map(begin, size));
+        _base = addr;
     }
 
     Package::~Package() {
-    	_file->unmap((uchar*)_base);
+    	//_file->unmap((uchar*)_base);
 #ifdef MEM_DEBUG
     	qDebug() << "Package destroyed";
 #endif
     }
 
-    void Package::insertRecord(Record *record, bool isNativePackage) {
-        Q_UNUSED(isNativePackage);
+    bool Package::insertRecord(Record *record, bool isNativePackage) {
         if (record == NULL) {
             throw new std::runtime_error(
                     "Null pointer in Package::insertRecord");
         }
 
-        bool emptyRecordExist = *_filled < _capacity;
-        if (emptyRecordExist) {
+        //bool emptyRecordExist = *_filled < _capacity;
+        if (_parent->emptyRecordExist(_number)) {
             /*_file->seek((quint64)(_begin + (*_filled) * sizeof(Record)));
             if (_file->write((char*)record, (quint64)sizeof(Record)) != sizeof(Record)) {
                 throw new std::out_of_range("Cann't write to DB.");
             }*/
-        	_base[*_filled] = *record;
-        	Profiler::instance().insertedInNative();
-            (*_filled)++;
+        	_base[_parent->getCurPos(_number)/**_filled*/] = *record;
+        	if(isNativePackage) Profiler::instance().insertedInNative();
+        	_parent->incPos(_number);
+        	return true;
+            /*(*_filled)++;
             if ((*_filled) == INT_MAX) {
                 throw new std::out_of_range("Package overflow.");
-            }
+            }*/
         } else {
-            _parent->insertToNextPackage(_number, record);
+            return false;
         }
 
     }
