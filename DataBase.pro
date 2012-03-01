@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     base \
-    DataBase
+    DataBase \
+    ChartXY
