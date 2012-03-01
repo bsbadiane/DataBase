@@ -57,25 +57,21 @@ namespace db {
 
     }
 
-    Record* Package::searchRecord(char ID[10]) {
-    	Q_UNUSED(ID);
-    	return NULL;
-        /*Record* records = reinterpret_cast<Record*>(_file->map(_begin, _size));
-        if (records == NULL) {
-            throw new std::runtime_error(
-                    "Cann't map file in Package::insertRecord");
-        }
+    bool Package::searchRecord(char ID[10], Record*& record) {
+    	record = NULL;
 
-        bool last = *_filled < _capacity;
 
-        for (int i = 0; i < _capacity; ++i) {
-            if (strncmp(records[i].ID, ID, Record::ID_SIZE-1) == 0) {
-                return new Record(records[i]);
+        bool last = _parent->emptyRecordExist(_number);
+        int capacity = _parent->getCapacity();
+
+        for (int i = 0; i < capacity; ++i) {
+            if (strncmp(_base[i].ID, ID, Record::ID_SIZE-1) == 0) {
+                record = new Record(_base[i]);
+                return true;
             }
         }
 
-        _file->unmap((uchar*)records);
-        return last ? NULL : _parent->searchInNextPackage(_number, ID);*/
+        return last;
     }
 
 } /* namespace db */

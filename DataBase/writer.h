@@ -50,6 +50,7 @@ namespace db {
         bool emptyRecordExist(int currentNumber);
         int getCurPos(int currentNumber);
         void incPos(int currentNumber);
+        int getCapacity();
     };
 
     //////////////////////////////////
@@ -58,6 +59,11 @@ namespace db {
     int Writer::getBasePos() const {
         return _basePos;
     }*/
+
+    inline
+    int Writer::getCapacity() {
+    	return _capacity;
+    }
 
     inline
     void Writer::insertToNextPackage(int currentNumber, Record* record) {
@@ -69,12 +75,12 @@ namespace db {
         //_packages[currentNumber + 1]->insertRecord(record, false);
     }
 
-    inline Record *Writer::searchInNextPackage(int currentNumber, char ID[10]) {
+    /*inline Record *Writer::searchInNextPackage(int currentNumber, char ID[10]) {
         if (currentNumber + 1 >= _numberOfPackages) {
             currentNumber = -1;
         }
         return _packages[currentNumber + 1]->searchRecord(ID);
-    }
+    }*/
 
     inline
     void Writer::insertPackage(int number, Record *record) const {
@@ -100,7 +106,15 @@ namespace db {
         if ((number *= _scale) >= _numberOfPackages) {
             number = _numberOfPackages - 1;
         }
-        return _packages[number]->searchRecord(ID);
+        Record* record = NULL;
+        while(!_packages[number]->searchRecord(ID, record)) {
+        	++number;
+        	if (number >= _numberOfPackages) {
+        		number = 0;
+        	}
+        	record = NULL;
+        }
+        return record;
     }
 
     inline
