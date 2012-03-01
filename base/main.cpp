@@ -1,0 +1,70 @@
+#include <QtCore/QCoreApplication>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <string>
+
+const int dlina = 10;
+const int razmer = 12;
+struct Record
+{
+        char ID[10];
+        char string[razmer];
+        int number;
+};
+
+int main(int argc, char *argv[])
+{
+        FILE *f=NULL;
+        //Record element;
+        f = fopen("../base.dat","a+b");
+        char names[] = {'q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m'};
+
+        char j[dlina+1];
+        for (int i = 0; i<dlina+1; i++)
+        {
+                j[i]='0';
+        }
+
+        for (long i = 0; i< 1000000;i++)
+        {
+                Record element ;
+                if (j[0]=='9')
+                {
+                        j[0] = '0';
+                        j[1]++;
+                        element.ID[0]=j[0];
+                } else {
+                        j[0]++;
+                        element.ID[0]=j[0];
+
+                }
+                for (int k = 1; k< 10; k++)
+                {
+                        if (j[k]=='9')
+                        {
+                                j[k] = '0';
+                                j[k+1]++;
+                                element.ID[k]=j[k];
+                        } else {
+                                element.ID[k]=j[k];
+                        }
+                }
+                element.ID[9] = 0;
+
+                //формирования рандомного текста
+                for (int j = 0; j<razmer-1; j++)
+                {
+                        element.string[j]= names[rand()%26];
+                }
+                element.string[razmer-1] = 0;
+
+                //формирование рандомного значения
+                element.number = rand() % 10000;
+
+                fwrite(&element,sizeof(Record),1,f);
+
+        }
+        fclose(f);
+        return 0;
+}
