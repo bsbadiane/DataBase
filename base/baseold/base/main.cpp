@@ -17,6 +17,7 @@ int main()
 	FILE *f=NULL;
 	//Record element;
 	f = fopen("base.dat","a+b");
+	FILE *f2 = fopen("base.search","a+b");
 	char names[] = {'q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m'};
 	
 	char j[dlina+1];
@@ -25,7 +26,7 @@ int main()
 		j[i]='0';
 	}
 
-	for (long i = 0; i< 1000000;i++)
+	for (long i = 0; i< 1000200;i++)
 	{
 		Record element ;
 		if (j[0]=='Z')
@@ -66,9 +67,11 @@ int main()
 		{
 			std::
 		}*/
-		fwrite(&element,sizeof(Record),1,f);
+		if (i < 1000000) fwrite(&element,sizeof(Record),1,f);
+		fwrite(&(element.ID), 7, 1, f2);
 		
 	}
 	fclose(f);
+	fclose(f2);
 	return 0;
 }

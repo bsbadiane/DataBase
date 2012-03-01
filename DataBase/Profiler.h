@@ -14,6 +14,7 @@
 namespace db {
 
 class TProfiler;
+class DataBase;
 
 typedef Singleton<TProfiler> Profiler;
 
@@ -44,12 +45,17 @@ private:
 	QString _dir2;
 	QString _stepsFile;
 	QString _output;
+	QString _searchFile;
+	int		_dbSize;
+	int		_recToRead;
 	QList<Step> _steps;
 	QDir _hashDir[2];
 
 	int _nativeCount;
+	int _searchTime;
 	QList<Point> _ro[2];
 	QList<Point> _over[2];
+	QList<Point> _time[2];
 
 	TProfiler();
 	virtual ~TProfiler();
@@ -59,6 +65,7 @@ private:
 	void logResult(int number, int hasher);
 	void cleanResult();
 	void flushLogs();
+	void searchInDB(DataBase* db);
 };
 
 } /* namespace db */

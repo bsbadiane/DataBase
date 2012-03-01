@@ -23,7 +23,7 @@ namespace db {
     class Reader{//: public QObject {
     //Q_OBJECT
     public:
-        Reader(QString fileName, QSharedPointer<Writer> writer,
+        Reader(QString fileName, int PackToRead, QSharedPointer<Writer> writer,
                QSharedPointer<Hasher> hasher);
         virtual ~Reader();
 

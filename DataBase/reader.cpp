@@ -19,13 +19,13 @@
 
 namespace db {
 
-    Reader::Reader(QString fileName, QSharedPointer<Writer> writerCallBack,
+    Reader::Reader(QString fileName, int packToRead, QSharedPointer<Writer> writerCallBack,
                    QSharedPointer<Hasher> hasher) :
              _writer(writerCallBack), _hasher(hasher) {
         //_writer = writerCallBack;
         _file = new QFile(fileName);
         _pos = 0;
-        _fileSize = _file->size();
+        _fileSize = packToRead*sizeof(Record);//_file->size();
         _recordArray = NULL;
         _frameBorder = 0;
         if (!_file->open(QFile::ReadOnly)) {

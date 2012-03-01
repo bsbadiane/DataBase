@@ -14,12 +14,13 @@
 
 namespace db {
 
-    Writer::Writer(QFile* file, int numberOfPackages, int hashDegree, int basePos) :
+    Writer::Writer(QFile* file, int dbSize ,int numberOfPackages, int hashDegree, int basePos) :
             QObject(0), _packages(numberOfPackages) {
         if (file == NULL) {
             throw new std::runtime_error("NULL pointer in Writer::Writer");
         }
 
+        _dbSize = dbSize;
         _file = file;
         //_metaPackages = metaPackages;
         _metaPackages = reinterpret_cast<int*>(_file->map(
@@ -40,7 +41,7 @@ namespace db {
             }
         }
 
-        _capacity = packNum / numberOfPackages;
+        _capacity = _dbSize / numberOfPackages;
         int size = _capacity*sizeof(Record);
 
         _addr = reinterpret_cast<Record*>(_file->map(basePos,

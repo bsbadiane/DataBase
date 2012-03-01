@@ -62,13 +62,24 @@ namespace db {
 
 
         bool last = _parent->emptyRecordExist(_number);
-        int capacity = _parent->getCapacity();
+        int pos = _parent->getCurPos(_number);
 
-        for (int i = 0; i < capacity; ++i) {
-            if (strncmp(_base[i].ID, ID, Record::ID_SIZE-1) == 0) {
+        for (int i = 0; i < pos; ++i) {
+            /*if (strncmp(_base[i].ID, ID, Record::ID_SIZE-1) == 0) {
                 record = new Record(_base[i]);
                 return true;
-            }
+            }*/
+        	bool eq = true;
+        	for (int j = 0; j < Record::ID_SIZE-1; ++j) {
+        		if (_base[i].ID[j] != ID[j]) {
+        			eq = false;
+        			break;
+        		}
+			}
+        	if (eq) {
+        		record = new Record(_base[i]);
+        		return true;
+        	}
         }
 
         return last;

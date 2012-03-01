@@ -10,6 +10,7 @@
 
 #include "config.h"
 #include "Hashers/Hasher.h"
+#include "Searcher.h"
 #include <qobject.h>
 #include <qfile.h>
 #include <QtCore>
@@ -22,19 +23,21 @@ namespace db {
     class DataBase: public QObject {
     Q_OBJECT
     public:
-        DataBase(QString db, int numberOfPackages, Hasher::Constructor hashBuilder,
+        DataBase(QString db, int dbSize, int numberOfPackages, Hasher::Constructor hashBuilder,
         		QObject* parent = 0);
         virtual ~DataBase();
 
-        void buildDB(QString src);
+        void buildDB(QString src, int packToRead);
         Record* searchByID(char ID[10]);
 
         //int getBasePos();
 
     private:
-        qint64 _basePos;
+        qint64  _basePos;
+        int		_dbSize;
         QSharedPointer<Writer>  _writer;
         QSharedPointer<Hasher>    _hasher;
+        QSharedPointer<Searcher>	_searcher;
 
         void prepareDB(QFile* file, int numberOfPackages);
 
@@ -47,6 +50,11 @@ namespace db {
     int DataBase::getBasePos() {
         return _basePos;
     }*/
+
+    inline
+    Record* DataBase::searchByID(char ID[10]) {
+    	return _searcher->search(ID);
+    }
 
 } /* namespace db */
 #endif /* DATABASE_H_ */

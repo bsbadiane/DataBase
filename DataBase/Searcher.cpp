@@ -18,10 +18,4 @@ namespace db {
     Searcher::~Searcher() {
     }
 
-    Record* Searcher::search(char ID[10]) {
-        quint64 number = _hasher->getNumber(ID);
-        int hash = _hasher->getHash(number);
-        return _writer->searchPackage(hash, ID);
-    }
-
 } /* namespace db */

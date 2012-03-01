@@ -22,7 +22,7 @@ namespace db {
     Q_OBJECT
     friend class Package;
     public:
-        Writer(QFile* file, int numberOfPackages, int hashDegree, int basePos);
+        Writer(QFile* file, int dbSize, int numberOfPackages, int hashDegree, int basePos);
         virtual ~Writer();
 
         //int getBasePos() const;
@@ -37,6 +37,7 @@ namespace db {
 
     private:
         int _numberOfPackages;
+        int _dbSize;
         //int _basePos;
         Record* _addr;
         int _capacity;
