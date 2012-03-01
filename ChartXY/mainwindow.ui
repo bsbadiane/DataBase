@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>486</width>
+    <height>370</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ChartXY</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="ChartXY" name="chart" native="true"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>486</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuStep">
+    <property name="title">
+     <string>Step</string>
+    </property>
+    <addaction name="actionGrp1"/>
+    <addaction name="actionGrp2"/>
+    <addaction name="actionGrp3"/>
+   </widget>
+   <addaction name="menuStep"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionGrp1">
+   <property name="text">
+    <string>grp1</string>
+   </property>
+  </action>
+  <action name="actionGrp2">
+   <property name="text">
+    <string>grp2</string>
+   </property>
+  </action>
+  <action name="actionGrp3">
+   <property name="text">
+    <string>grp3</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>ChartXY</class>
+   <extends>QWidget</extends>
+   <header>chartxy/chartxy.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
