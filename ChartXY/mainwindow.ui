@@ -18,6 +18,9 @@
     <item>
      <widget class="ChartXY" name="chart" native="true"/>
     </item>
+    <item>
+     <widget class="QSpinBox" name="spinBox"/>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -42,17 +45,17 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionGrp1">
    <property name="text">
-    <string>grp1</string>
+    <string>BD процентное отношение записей, попавших в область переполнения к общему числу записей</string>
    </property>
   </action>
   <action name="actionGrp2">
    <property name="text">
-    <string>grp2</string>
+    <string>Плотность заполнения основной области</string>
    </property>
   </action>
   <action name="actionGrp3">
    <property name="text">
-    <string>grp3</string>
+    <string>Exit</string>
    </property>
   </action>
  </widget>
@@ -66,5 +69,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionGrp3</sender>
+   <signal>activated()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>242</x>
+     <y>184</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

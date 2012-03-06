@@ -28,16 +28,19 @@ MainWindow::~MainWindow()
 void MainWindow::grp1()
 {
     qDebug() <<  "grp1" ;
-    setupModel("../closer.out.over","../closer.out.ro");
+    setupModel("../closer.out.over","../numbersys.out.over");
 
     setupChart();
 
-    setWindowTitle("BD num1");
+    setWindowTitle("BD процентное отношение записей, попавших в область переполнения к общему числу записей");
 }
 
 void MainWindow::grp2()
 {
     qDebug() <<  "grp2" ;
+    setupModel("../closer.out.ro","../numbersys.out.ro");
+    setupChart();
+    setWindowTitle("Плотность заполнения основной области");
 }
 
 void MainWindow::grp3()
@@ -49,6 +52,9 @@ void MainWindow::setupModel(QString filepatch, QString filepatch2)
 {
     int i;
 
+    //int viewmax;
+    //viewmax = ui->spinBox;
+    qDebug() << viewmax ;
     QFile file(filepatch);
     bool qwe  = file.open(QFile::ReadOnly);
     if (qwe)
@@ -97,6 +103,10 @@ void MainWindow::setupModel(QString filepatch, QString filepatch2)
         qDebug() << points2[i].y;
     }
 
+    for (i=0; i <size;i++)
+    {
+        points2[i].x = points2[i].x + 10;
+    }
     file2.close();
 
   model=new QStandardItemModel(size,3,this);
