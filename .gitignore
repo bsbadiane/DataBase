@@ -1,0 +1,11 @@
+/debug
+/release
+/Makefile
+/Makefile.Debug
+/Makefile.Release
+/base.dat
+/nydb.db
+/Closer
+/NumberSystem
+/base.search
+/ChartXY

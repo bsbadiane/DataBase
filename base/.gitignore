@@ -1,0 +1,6 @@
+/debug
+/release
+/Makefile
+/base
+/Makefile.Debug
+/Makefile.Release

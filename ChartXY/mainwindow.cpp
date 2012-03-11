@@ -28,7 +28,7 @@ MainWindow::~MainWindow()
 void MainWindow::grp1()
 {
     qDebug() <<  "grp1" ;
-    setupModel("../closer.out.over","../closer.out.ro");
+    setupModel("./Closer/out.over","./Closer/out.ro");
 
     setupChart();
 

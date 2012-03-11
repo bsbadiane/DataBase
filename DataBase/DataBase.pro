@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = DataBase
-QT += core
+QT = core
 HEADERS += Profiler.h \
     Singleton.h \
     Searcher.h \
