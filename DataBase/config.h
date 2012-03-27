@@ -14,7 +14,7 @@ namespace db {
 
     //const int recordsPerCircle = 500;
     //const int threadCount = 6;
-    //int packNum = 1200000;		//TODO Very bad
+    //int packNum = 1200000;
     //int packToRead = 1000000;
 }        // namespace db
 #endif

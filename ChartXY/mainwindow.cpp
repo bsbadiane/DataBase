@@ -9,6 +9,9 @@ MainWindow::MainWindow(QWidget *parent):
   ui(new Ui::MainWindow)
   {
   ui->setupUi(this);
+  ui->spinBox->setMaximum(200001);
+  ui->spinBox_first->setMaximum(120000);
+  ui->spinBox->setValue(200001);
 
   grp1();
 
@@ -27,106 +30,126 @@ MainWindow::~MainWindow()
 
 void MainWindow::grp1()
 {
+    num1 = 1;
     qDebug() <<  "grp1" ;
-    setupModel("../closer.out.over","../numbersys.out.over");
+    setupModel("./Closer/out.over","./NumberSystem/out.over");
 
     setupChart();
 
     setWindowTitle("BD процентное отношение записей, попавших в область переполнения к общему числу записей");
+    ui->textBrowser->setText("Метод преобразования системы счисления : BD процентное отношение записей, попавших в область переполнения к общему числу записей");
+    ui->textBrowser_2->setText("Метод складывания : BD процентное отношение записей, попавших в область переполнения к общему числу записей");
+
 }
 
 void MainWindow::grp2()
 {
+    num1 = 2;
     qDebug() <<  "grp2" ;
-    setupModel("../closer.out.ro","../numbersys.out.ro");
+    setupModel("./Closer/out.ro","./NumberSystem/out.ro");
     setupChart();
     setWindowTitle("Плотность заполнения основной области");
+    ui->textBrowser->setText("Метод преобразования системы счисления : Плотность заполнения основной области");
+    ui->textBrowser_2->setText("Метод складывания : Плотность заполнения основной области");
 }
 
 void MainWindow::grp3()
 {
-qDebug() <<  "grp3" ;
+    num1 = 3;
+    qDebug() <<  "grp3" ;
+    setupModel("./Closer/out.time","./NumberSystem/out.time");
+    setupChart();
+    setWindowTitle("Время поиска");
+    ui->textBrowser->setText("Метод преобразования системы счисления : Время поиска");
+    ui->textBrowser_2->setText("Метод складывания : Время поиска");
 }
+
 
 void MainWindow::setupModel(QString filepatch, QString filepatch2)
 {
-    int i;
-
-    //int viewmax;
-    //viewmax = ui->spinBox;
-    qDebug() << viewmax ;
+    //отображение
+    int maxGraphXView,i,minGraphXView;
+    maxGraphXView = ui->spinBox->value();
+    minGraphXView = ui->spinBox_first->value()-1;
+    maxGraphXView++;
+    qDebug() << maxGraphXView;
     QFile file(filepatch);
     bool qwe  = file.open(QFile::ReadOnly);
     if (qwe)
-        qDebug() <<  "true"    ;
+        qDebug() <<  "true file"    ;
     else
-        qDebug() << "false;"                     ;
+        qDebug() << "false file"                     ;
     QDataStream stream(&file);
     stream >> size;
-    qDebug() << size;
     Point points[size];
-
+    sizeNew = 0;
+    int sizeMin;
+    sizeMin = 0;
+    int totalSize = 0;
     for (i=0; i <size;i++)
     {
         QDataStream& operator >> (QDataStream& stream, Point point1);
-        {
-                stream >> points[i].x >> points[i].y;
-                //return stream;
-        }
-        qDebug() << points[i].x;
-        qDebug() << points[i].y;
+        stream >> points[i].x >> points[i].y;
+        totalSize += points[i].y;
+        qDebug() << points[i].x << "   " << points[i].y;
+        if (points[i].x <= minGraphXView)
+            sizeMin++;
+        if (points[i].x > maxGraphXView)
+            break;
+        sizeNew++;
+
     }
-
+    qDebug() << "!!!!!!!!" << totalSize;
     file.close();
-
-    qDebug() << "===============================";
 
     QFile file2(filepatch2);
     bool qwe2  = file2.open(QFile::ReadOnly);
     if (qwe2)
-        qDebug() <<  "true"    ;
+        qDebug() <<  "true file2"    ;
     else
-        qDebug() << "false;"                     ;
+        qDebug() << "false file2"                     ;
     QDataStream stream2(&file2);
     stream2 >> size;
-    qDebug() << size;
     Point points2[size];
 
-    for (i=0; i <size;i++)
+    totalSize = 0;
+    for (i=0; i <sizeNew;i++)
     {
         QDataStream& operator >> (QDataStream& stream2, Point point1);
-        {
-                stream2 >> points2[i].x >> points2[i].y;
-                //return stream;
-        }
-        qDebug() << points2[i].x;
-        qDebug() << points2[i].y;
+        stream2 >> points2[i].x >> points2[i].y;
+        totalSize += points2[i].y;
+        qDebug() << i << points2[i].x << "   " << points2[i].y;
     }
+    qDebug() << "!!!!!!!!!!!!!!!!" << totalSize;
 
-    for (i=0; i <size;i++)
+    for (i=0; i <sizeNew;i++)
     {
         points2[i].x = points2[i].x + 10;
     }
     file2.close();
 
-  model=new QStandardItemModel(size,3,this);
-  model->setHeaderData(0,Qt::Horizontal,tr("X"));
-  model->setHeaderData(1,Qt::Horizontal,tr("Y"));
-  model->setHeaderData(2,Qt::Horizontal,tr("K"));
+    int temp;
+    temp = sizeNew-sizeMin;
+    qDebug() << temp << "=" << sizeNew << "-" << sizeMin;
+    model=new QStandardItemModel(temp,3,this);
+    model->setHeaderData(0,Qt::Horizontal,tr("X"));
+    model->setHeaderData(1,Qt::Horizontal,tr("Y"));
+    model->setHeaderData(2,Qt::Horizontal,tr("K"));
 
-  for(i=0;i<model->rowCount();i++)
+    qDebug() << "======";
+    qDebug() << sizeMin ;
+    i=sizeMin;
+    for(int j=0;j<model->rowCount();j++)
     {
+        qDebug() << "-=- " << i << " " << j;
         //по іксу
-    model->setData(model->index(i,0,QModelIndex()),points[i].x);
-
-    model->setData(model->index(i,1,QModelIndex()),points[i].y);
-    model->setData(model->index(i,1,QModelIndex()),QColor(255,0,0),Qt::DecorationRole);
-
-    model->setData(model->index(i,2,QModelIndex()),points2[i].y);
-    model->setData(model->index(i,2,QModelIndex()),QColor(0,255,0),Qt::DecorationRole);
+        model->setData(model->index(j,0,QModelIndex()),points[i].x);
+        model->setData(model->index(j,1,QModelIndex()),points[i].y);
+        model->setData(model->index(j,1,QModelIndex()),QColor(255,0,0),Qt::DecorationRole);
+        model->setData(model->index(j,2,QModelIndex()),points2[i].y);
+        model->setData(model->index(j,2,QModelIndex()),QColor(0,255,0),Qt::DecorationRole);
+        i++;
     }
-
-  //ui->table->setModel(model);
   }
 
 void MainWindow::setupChart(void)
@@ -144,3 +167,13 @@ void MainWindow::setupChart(void)
   ui->chart->setting().scale().setNominalAutoLimit(true);
   ui->chart->updateChart();
   }
+
+void MainWindow::on_pushButton_clicked()
+{
+    if (num1 == 1)
+        grp1();
+    if (num1 == 2)
+        grp2();
+    if (num1 == 3)
+        grp3();
+}

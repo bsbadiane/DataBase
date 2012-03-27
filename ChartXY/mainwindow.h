@@ -31,9 +31,10 @@ private:
         int x;
         float y;
     };
-    int size;
+    int size,sizeNew,num1;
 
 private slots:
+    void on_pushButton_clicked();
 };
 
 #endif // MAINWINDOW_H
