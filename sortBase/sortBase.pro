@@ -11,8 +11,15 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    btree.cpp \
+    radix.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    btree.h \
+    radix.h
 
 FORMS    += mainwindow.ui
+
+OTHER_FILES += \
+    temp.txt
