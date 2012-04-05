@@ -4,6 +4,7 @@
 #include <string>
 #include <QVector>
 #include <QDebug>
+#include <QFile>
 
 const int dlina = 7;
 const int razmer = 12;
@@ -18,6 +19,7 @@ int main()
 {
         FILE *f=NULL;
         //Record element;
+        QFile::remove("../base.dat");
         f = fopen("../base.dat","a+b");
         //FILE *f2 = fopen("base.search","a+b");
         char namesW[] = {'q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m'};
