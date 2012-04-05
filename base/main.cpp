@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
+#include <QVector>
+#include <QDebug>
 
 const int dlina = 7;
 const int razmer = 12;
@@ -18,7 +20,21 @@ int main()
         //Record element;
         f = fopen("../base.dat","a+b");
         //FILE *f2 = fopen("base.search","a+b");
-        char names[] = {'q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m'};
+        char namesW[] = {'q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m'};
+        //Qvevector<string[razmer]>
+
+        QVector <QVector<char> > Snames(100);
+
+        for (int i = 0; i < 100; ++i) {
+            Snames[i].resize(razmer);
+            for (int j = 0; j<razmer-1; j++)
+            {
+                    Snames[i][j]= namesW[rand()%26];
+            }
+            Snames[i][razmer-1] = 0;
+            qDebug() << Snames[i];
+        }
+
 
         char j[dlina+1];
         for (int i = 0; i<dlina+1; i++)
@@ -52,9 +68,10 @@ int main()
                 }
                 element.ID[6] = 0;
 
+                int indexN = rand()%100;
                 for (int j = 0; j<razmer-1; j++)
                 {
-                        element.string[j]= names[rand()%26];
+                        element.string[j]= Snames[indexN][j];
                 }
                 element.string[razmer-1] = 0;
                 element.number = rand() % 10000;

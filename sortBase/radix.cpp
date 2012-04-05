@@ -1,4 +1,7 @@
 #include "radix.h"
+#include <QFile>
+#include <QDataStream>
+#include<QTime>
 
 radix::radix()
 {
@@ -8,7 +11,7 @@ radix::radix()
     FILE *f=NULL;
     //Record element;
     f = fopen("../base.dat","rb");
-    for (int i=0; i <8;i++)
+    for (int i=0; i <800000;i++)
     {
         Record tempRecord;
         fread(&tempRecord,sizeof(Record),1,f);
@@ -28,11 +31,11 @@ int radix::getChar(Record recordVariable,bool longMethod, int numInt) {
             retval = retval/10;
         retval = retval % 10;
     } else {
-        retval = (int) recordVariable.string[11 - numInt];
+        retval = (int) recordVariable.string[10 - numInt] - (int)'a';
     }
 
     //i = longMethod ? recordVariable.number :
-    qDebug() << retval;
+   // qDebug() << retval;
     return retval;
 }
 
@@ -41,14 +44,18 @@ int radix::getChar(Record recordVariable,bool longMethod, int numInt) {
 QString radix::start(bool longMethod)
 //length - макс длина числа(кол-во разрядов), longmethod - по строкам или по числам
 {
+    longMethod = !longMethod;
     QString returnMessage;
     returnMessage = "ololo";
     //int alphabetStart = 97; //97 - номер буквы "a" в ASCII
     int range = longMethod ? 10 : 26;  //97 - номер буквы "a" в ASCII
-    int length = longMethod ? 6 : 12;
+    int length = longMethod ? 6 : 11;
     int size;
     size = records.size();
 
+
+    QTime timer;
+    timer.start();
     //создание копии базы
     QVector <Record> radixRecords;
     qDebug() << records.size();
@@ -76,16 +83,43 @@ QString radix::start(bool longMethod)
             //}
         }
 
-        qDebug() << "Sborka";
+        //qDebug() << "Sborka";
+        radixRecords.clear();
         //А теперь собирается всё в одно
         for (int j =0; j<range; j++) {
             //qDebug() << radixRecordsTemp[j].size();
             for (int k = 0; k < radixRecordsTemp[j].size(); k++) {
-                recordsOtput.push_back(radixRecordsTemp[j].at(k));
+                //recordsOtput.push_back(radixRecordsTemp[j].at(k));
+                radixRecords.push_back(radixRecordsTemp[j].at(k));
             }
         }
     }
 
+    returnMessage = QString::number(timer.elapsed());
+
     //recordsOtput в файл
+    QString filename = "radix.out.";
+    if (longMethod) {
+        filename += "int";
+    } else {
+        filename += "string";
+    }
+    QFile::remove(filename);
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly);
+    QDataStream stream(&file);
+    for (int i = 0; i < radixRecords.size(); ++i) {
+        stream << radixRecords[i];
+        //qDebug() << radixRecords[i].string << radixRecords[i].number;
+    }
+
+    file.close();
+
+
     return returnMessage;
+}
+
+QDataStream& operator <<(QDataStream& stream, radix::Record& record) {
+    stream << record.ID << record.number << record.string;
+    return stream;
 }

@@ -1,5 +1,7 @@
 #include "btree.h"
 #include <QTime>
+#include <QFile>
+#include <QDataStream>
 
 btree::btree()
 {
@@ -9,7 +11,7 @@ btree::btree()
     FILE *f=NULL;
     //Record element;
     f = fopen("../base.dat","rb");
-    for (int i=0; i <800000;i++)
+    for (int i=0; i <80000;i++)
     {
         Record tempRecord;
         fread(&tempRecord,sizeof(Record),1,f);
@@ -43,6 +45,7 @@ QString btree::start(bool tyep1)
     TNode* tree = NULL;
     for (int i = 0; i< records.size();i++)
     {
+        qDebug() << i;
         makeTree(&tree,records.at(i));
     }
 
@@ -51,6 +54,24 @@ QString btree::start(bool tyep1)
     //qDebug() << timer.elapsed();
     QString returnMessage;
     returnMessage = QString::number(timer.elapsed());
+
+    QString filename = "btree.out.";
+    if (tyep) {
+        filename += "int";
+    } else {
+        filename += "string";
+    }
+    QFile::remove(filename);
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly);
+    QDataStream stream(&file);
+    for (int i = 0; i < recordsOtput.size(); ++i) {
+        stream << recordsOtput[i];
+        //qDebug() << radixRecords[i].string << radixRecords[i].number;
+    }
+
+    file.close();
+
     return returnMessage;
 
 }
@@ -93,4 +114,9 @@ void btree::walkTree(TNode* p)
         */
       walkTree(p->pright);
    }
+}
+
+QDataStream& operator <<(QDataStream& stream, btree::Record& record) {
+    stream << record.ID << record.number << record.string;
+    return stream;
 }
