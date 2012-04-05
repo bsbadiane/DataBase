@@ -18,20 +18,20 @@ radix::radix()
     fclose(f);
 }
 
-float radix::stringtofloat(char *string)
-{
-    int i = 0,j;
-    float floatValue = 0;
-    while (string[i]!=0)
-    {
-        j= (int) string[i];
-        j = j -96;
-        floatValue += pow(26,11-i)*j;
-        i++;
-    }
-    //qDebug() << floatValue;
-    return floatValue;
-}
+//float radix::stringtofloat(char *string)
+//{
+//    int i = 0,j;
+//    float floatValue = 0;
+//    while (string[i]!=0)
+//    {
+//        j= (int) string[i];
+//        j = j -96;
+//        floatValue += pow(26,11-i)*j;
+//        i++;
+//    }
+//    //qDebug() << floatValue;
+//    return floatValue;
+//}
 
 
 int radix::getChar(Record recordVariable,bool longMethod, int numInt) {
