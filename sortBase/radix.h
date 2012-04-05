@@ -20,6 +20,7 @@ private:
             int number;
     };
     QVector <Record> records;
+    QVector <Record> recordsOtput;
     int getChar(Record recordVariable,bool longMethod, int numInt);
 
 };

@@ -20,6 +20,7 @@ private:
             int number;
     };
     QVector <Record> records;
+    QVector <Record> recordsOtput;
     bool tyep;
 
     struct TNode {
