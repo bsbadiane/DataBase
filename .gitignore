@@ -8,5 +8,16 @@
 /Closer
 /NumberSystem
 /base.search
-/ChartXY
+ChartXY/Makefile
+ChartXY/Makefile.Debug
+ChartXY/Makefile.Release
+ChartXY/ChartXY.pro.user
+ChartXY/object_script.ChartXY.Debug
+ChartXY/object_script.ChartXY.Release
+.git
+DataBase.pro.user
+base/Makefile
+base/Makefile.Debug
+base/Makefile.Release
+sad
 

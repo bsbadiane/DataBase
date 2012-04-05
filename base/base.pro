@@ -15,4 +15,4 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += baseold/base/main.cpp
+SOURCES += main.cpp

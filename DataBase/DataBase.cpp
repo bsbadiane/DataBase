@@ -89,19 +89,6 @@ namespace db {
 		}
         file->unmap((uchar*)metaTable);
 
-        /*if (file->write((char*)&numberOfPackages, (qint64)sizeof(numberOfPackages))
-                != sizeof(numberOfPackages)) {
-            throw new std::runtime_error(
-                    "Can't write to DB in DataBase::prepareDB");
-        }
-        int zero = 0;
-        for (int i = 0; i < numberOfPackages; ++i) {
-            if (file->write((char*)&zero, (qint64)sizeof(zero)) != sizeof(zero)) {
-                throw new std::runtime_error(
-                        "Can't write to DB in DataBase::prepareDB");
-            }
-        }*/
-
         file->flush();
     }
 
