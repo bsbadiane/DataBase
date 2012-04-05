@@ -46,8 +46,8 @@ void TProfiler::profile() {
 
 	_hashDir[0] = QDir(rootDir.absolutePath() + "/" + _dir1);
 	_hashDir[1] = QDir(rootDir.absolutePath() + "/" + _dir2);
-	clean(_hashDir[0]);
-	clean(_hashDir[1]);
+        clean(_hashDir[0]);
+        clean(_hashDir[1]);
 	for (int i = 0; i < _steps.size(); ++i) {
 		for (int numberOfPackages = _steps[i].begin;
 				numberOfPackages < _steps[i].end;
@@ -58,7 +58,7 @@ void TProfiler::profile() {
 						_hashDir[hasher].absolutePath() + "/"
 								+ QString::number(numberOfPackages) + ".db",
 						_dbSize, numberOfPackages, _hashers[hasher]);
-				base.buildDB(_source, _recToRead);
+                                base.buildDB(_source, _recToRead);
 				searchInDB(&base);
 				logResult(numberOfPackages, hasher);
 				cleanResult();

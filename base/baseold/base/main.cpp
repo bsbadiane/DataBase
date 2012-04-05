@@ -52,21 +52,13 @@ int main()
 		}
 		element.ID[6] = 0;
 
-    	//������������ ���������� ������
 		for (int j = 0; j<razmer-1; j++)
 		{
 			element.string[j]= names[rand()%26];
 		}
 		element.string[razmer-1] = 0;
-		
-		//������������ ���������� ��������
 		element.number = rand() % 10000;
-/*
 
-		for (int vlad = 0; vlad < 10; vlad++)
-		{
-			std::
-		}*/
 		if (i < 1000000) fwrite(&element,sizeof(Record),1,f);
 		fwrite(&(element.ID), 7, 1, f2);
 		

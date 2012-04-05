@@ -1,0 +1,110 @@
+#include <QRadioButton>
+#include <set>
+#include <algorithm>
+#include <iterator>
+#include <QDebug>
+#include <QFile>
+#include <stdlib.h>
+
+
+/*
+    for (int i = 0; i < range; ++i)
+                lists[i] = new List<Record>();
+
+            for (int i = 0; i < length; ++i)
+            {
+                //распределение по спискам
+                for (int j = 0; j < array.Length; ++j)
+                {
+                    if (longMethod)
+                    {
+                        int temp = (int) ((array[j].InfoLong%(long) Math.Pow(range, i + 1))/
+                                          (long) Math.Pow(range, i));
+                        lists[temp].Add(array[j]);
+                    }
+                    else
+                    {
+                        lists[array[j].InfoStr[length - 1 - i] % alphabetStart].Add(array[j]);
+                    }
+                }
+                //сборка
+                int index = 0;
+                for (int j = 0; j < range; ++j)
+                {
+                    for (int k = 0; k < lists[j].Count; ++k)
+                    {
+                        array[index++] = lists[j][k];
+                    }
+                }
+                for (int j = 0; j < range; ++j)
+                    lists[j].Clear();
+            }*/
+    int k;
+
+
+/*
+//карманная сортировка числовое
+void MainWindow::radix(bool tyep){
+    int smin,smax,size,sizeNew;
+    size = 800000;
+    smin = 0;
+    sizeNew = size/10;
+    smax = smin+size;
+
+    Record **mas;
+    int sizeMas = 0;
+
+    for(int i=0;i<10;i++) {
+        for (int j = 0;j<size;j++)
+            if ((points[j].number>smin)&&(points[j].number<=smax)) {
+                mas[sizeMas] = points[j];
+                sizeMas++;
+            }
+        radixsort(**mas,sizeMas);
+        smin+=sizeNew;
+        smax = smin+size;
+    }
+
+}
+*/
+
+/*
+//рекурсивная часть
+Record MainWindow::radixsort(Record **point,int size){
+    if (size > 10) {
+        int smin,smax,sizeNew;
+        smin = 0;
+        sizeNew = size/10;
+        smax = smin+size;
+
+        Record **mas;
+        int sizeMas = 0;
+
+        for(int i=0;i<10;i++) {
+            for (int j = 0;j<size;j++)
+                if ((points[j].number>smin)&&(points[j].number<=smax)) {
+                    mas[sizeMas] = points[j];
+                    sizeMas++;
+                }
+            radixsort(**mas,sizeMas);
+            smin+=sizeNew;
+            smax = smin+size;
+        }
+    } else {
+        for (int i = n - 1; i > 0; i--)
+        {
+            for (int j = 0; j < i; j++)
+            {
+                if (a[j] > a[j + 1])
+                {
+                    int t = a[j];
+                    a[j] = a[j+1];
+                    a[j+1] = t;
+                }
+            }
+        }
+    }
+    }
+
+    return **point;
+}*/

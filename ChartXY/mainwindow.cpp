@@ -9,9 +9,9 @@ MainWindow::MainWindow(QWidget *parent):
   ui(new Ui::MainWindow)
   {
   ui->setupUi(this);
-  ui->spinBox->setMaximum(180001);
+  ui->spinBox->setMaximum(200001);
   ui->spinBox_first->setMaximum(120000);
-  ui->spinBox->setValue(180000);
+  ui->spinBox->setValue(200001);
 
   grp1();
 
@@ -70,7 +70,7 @@ void MainWindow::setupModel(QString filepatch, QString filepatch2)
     //отображение
     int maxGraphXView,i,minGraphXView;
     maxGraphXView = ui->spinBox->value();
-    minGraphXView = ui->spinBox_first->value();
+    minGraphXView = ui->spinBox_first->value()-1;
     maxGraphXView++;
     qDebug() << maxGraphXView;
     QFile file(filepatch);
@@ -85,10 +85,12 @@ void MainWindow::setupModel(QString filepatch, QString filepatch2)
     sizeNew = 0;
     int sizeMin;
     sizeMin = 0;
+    int totalSize = 0;
     for (i=0; i <size;i++)
     {
         QDataStream& operator >> (QDataStream& stream, Point point1);
         stream >> points[i].x >> points[i].y;
+        totalSize += points[i].y;
         qDebug() << points[i].x << "   " << points[i].y;
         if (points[i].x <= minGraphXView)
             sizeMin++;
@@ -97,6 +99,7 @@ void MainWindow::setupModel(QString filepatch, QString filepatch2)
         sizeNew++;
 
     }
+    qDebug() << "!!!!!!!!" << totalSize;
     file.close();
 
     QFile file2(filepatch2);
@@ -109,12 +112,15 @@ void MainWindow::setupModel(QString filepatch, QString filepatch2)
     stream2 >> size;
     Point points2[size];
 
+    totalSize = 0;
     for (i=0; i <sizeNew;i++)
     {
         QDataStream& operator >> (QDataStream& stream2, Point point1);
         stream2 >> points2[i].x >> points2[i].y;
-        qDebug() << points2[i].x << "   " << points2[i].y;
+        totalSize += points2[i].y;
+        qDebug() << i << points2[i].x << "   " << points2[i].y;
     }
+    qDebug() << "!!!!!!!!!!!!!!!!" << totalSize;
 
     for (i=0; i <sizeNew;i++)
     {

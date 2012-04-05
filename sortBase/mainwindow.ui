@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>БД Лаба 3 вариант 7 Бинарное дерево.		Карманная сортировка.</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QRadioButton" name="binarytree">
+      <property name="text">
+       <string>Бинарное дерево</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string>buttonGroup_2</string>
+      </attribute>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QRadioButton" name="stringfield">
+      <property name="text">
+       <string>Строковое поле</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string>buttonGroup</string>
+      </attribute>
+     </widget>
+    </item>
+    <item row="0" column="2" rowspan="2">
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>Сортировать</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QRadioButton" name="radix">
+      <property name="text">
+       <string>Карманная сортировка.</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string>buttonGroup_2</string>
+      </attribute>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QRadioButton" name="intfield">
+      <property name="text">
+       <string>Числовое поле</string>
+      </property>
+      <attribute name="buttonGroup">
+       <string>buttonGroup</string>
+      </attribute>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="3">
+     <widget class="QTextEdit" name="textEdit"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>400</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="action"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="action">
+   <property name="text">
+    <string>Выход</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>action</sender>
+   <signal>activated()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <buttongroups>
+  <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
+</ui>
