@@ -12,16 +12,20 @@ public:
     radix();
     QString start (bool tyep);
 
-private:
     struct Record
     {
             char ID[7];
             char string[12];
             int number;
     };
+
+    private:
     QVector <Record> records;
+    QVector <Record> recordsOtput;
     int getChar(Record recordVariable,bool longMethod, int numInt);
 
 };
+
+QDataStream& operator <<(QDataStream& stream, radix::Record& record);
 
 #endif // RADIX_H

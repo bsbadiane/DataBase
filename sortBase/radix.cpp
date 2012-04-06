@@ -1,4 +1,7 @@
 #include "radix.h"
+#include <QFile>
+#include <QDataStream>
+#include<QTime>
 
 radix::radix()
 {
@@ -18,22 +21,6 @@ radix::radix()
     fclose(f);
 }
 
-//float radix::stringtofloat(char *string)
-//{
-//    int i = 0,j;
-//    float floatValue = 0;
-//    while (string[i]!=0)
-//    {
-//        j= (int) string[i];
-//        j = j -96;
-//        floatValue += pow(26,11-i)*j;
-//        i++;
-//    }
-//    //qDebug() << floatValue;
-//    return floatValue;
-//}
-
-
 int radix::getChar(Record recordVariable,bool longMethod, int numInt) {
     //numInt разряд
     int retval;
@@ -44,10 +31,11 @@ int radix::getChar(Record recordVariable,bool longMethod, int numInt) {
             retval = retval/10;
         retval = retval % 10;
     } else {
-        retval = (int) recordVariable.string[11 - numInt];
+        retval = (int) recordVariable.string[10 - numInt] - (int)'a';
     }
 
     //i = longMethod ? recordVariable.number :
+   // qDebug() << retval;
     return retval;
 }
 
@@ -56,14 +44,18 @@ int radix::getChar(Record recordVariable,bool longMethod, int numInt) {
 QString radix::start(bool longMethod)
 //length - макс длина числа(кол-во разрядов), longmethod - по строкам или по числам
 {
+    longMethod = !longMethod;
     QString returnMessage;
     returnMessage = "ololo";
     //int alphabetStart = 97; //97 - номер буквы "a" в ASCII
     int range = longMethod ? 10 : 26;  //97 - номер буквы "a" в ASCII
-    int length = longMethod ? 6 : 12;
+    int length = longMethod ? 6 : 11;
     int size;
-    size = 800000;
+    size = records.size();
 
+
+    QTime timer;
+    timer.start();
     //создание копии базы
     QVector <Record> radixRecords;
     qDebug() << records.size();
@@ -80,33 +72,54 @@ QString radix::start(bool longMethod)
 
             //повторять для каждой буквы, для заноса в определённый карман
             //можно сделать switch case
-            for (int j = 0; j<range; j++) {
+            //for (int j = 0; j<range; j++) {
 
                 //если значение равно нужному
-                if (j==getChar(radixRecords.at(k),longMethod,i)) {
+                //if (j==getChar(radixRecords.at(k),longMethod,i)) {
                     //переносим в разный буффер
-                    radixRecordsTemp[j].push_back(radixRecords.at(i));
-                    break;
-                }
-            }
+                    radixRecordsTemp[getChar(radixRecords.at(k),longMethod,i)].push_back(radixRecords.at(k));
+                    //break;
+                //}
+            //}
         }
 
         //qDebug() << "Sborka";
+        radixRecords.clear();
         //А теперь собирается всё в одно
-        int num = 0;
         for (int j =0; j<range; j++) {
-            qDebug() << radixRecordsTemp[j].size();
+            //qDebug() << radixRecordsTemp[j].size();
             for (int k = 0; k < radixRecordsTemp[j].size(); k++) {
-                //if (radixRecordsTemp[j].at(k)!= NULL) {
-                    radixRecords.remove(num);
-                    //вставить на место
-                    radixRecords.insert(num,radixRecordsTemp[j].at(k));
-                    num++;
-                //}
-
+                //recordsOtput.push_back(radixRecordsTemp[j].at(k));
+                radixRecords.push_back(radixRecordsTemp[j].at(k));
             }
-            //qDebug() << num;
         }
     }
+
+    returnMessage = QString::number(timer.elapsed());
+
+    //recordsOtput в файл
+    QString filename = "radix.out.";
+    if (longMethod) {
+        filename += "int";
+    } else {
+        filename += "string";
+    }
+    QFile::remove(filename);
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly);
+    QDataStream stream(&file);
+    for (int i = 0; i < radixRecords.size(); ++i) {
+        stream << radixRecords[i];
+        //qDebug() << radixRecords[i].string << radixRecords[i].number;
+    }
+
+    file.close();
+
+
     return returnMessage;
+}
+
+QDataStream& operator <<(QDataStream& stream, radix::Record& record) {
+    stream << record.ID << record.number << record.string;
+    return stream;
 }
