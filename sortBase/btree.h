@@ -40,6 +40,6 @@ public:
 
 };
 
-QDataStream& operator <<(QDataStream& stream, btree::Record& record);
+//QDataStream& operator <<(QDataStream& stream, btree::Record& record);
 
 #endif // BTREE_H

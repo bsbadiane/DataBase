@@ -2,6 +2,10 @@
 #include <QTime>
 #include <QFile>
 #include <QDataStream>
+#include <cstring>
+
+QDataStream& operator <<(QDataStream& stream, btree::Record& record);
+bool compareStrings(const char* str1, const char* str2);
 
 btree::btree()
 {
@@ -10,7 +14,7 @@ btree::btree()
      */
     FILE *f=NULL;
     //Record element;
-    f = fopen("../base.dat","rb");
+    f = fopen("base.dat","rb");
     for (int i=0; i <800000;i++)
     {
         Record tempRecord;
@@ -91,7 +95,7 @@ void btree::makeTree(TNode** pp, Record x)
             else
                makeTree(&((*pp)->pright), x);
         } else {
-            if(stringtofloat((*pp)-> value.string) >= stringtofloat(x.string))
+            if(compareStrings((*pp)-> value.string, x.string)/*stringtofloat((*pp)-> value.string) >= stringtofloat(x.string)*/)
                 makeTree(&((*pp)->pleft), x);
             else
                 makeTree(&((*pp)->pright), x);
@@ -116,7 +120,13 @@ void btree::walkTree(TNode* p)
    }
 }
 
+bool compareStrings(const char* str1, const char* str2) {
+	int res = std::strncmp(str1, str2, 11);
+	return res >= 0;
+}
+
 QDataStream& operator <<(QDataStream& stream, btree::Record& record) {
-    stream << record.ID << record.number << record.string;
+    //stream << record.ID << record.string << record.number;
+	stream.writeRawData((char*)&record, sizeof(record));
     return stream;
 }

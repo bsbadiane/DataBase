@@ -19,9 +19,10 @@ int main()
 {
         FILE *f=NULL;
         //Record element;
-        QFile::remove("../base.dat");
-        f = fopen("../base.dat","a+b");
-        //FILE *f2 = fopen("base.search","a+b");
+        QFile::remove("base.dat");
+        QFile::remove("base.search");
+        f = fopen("base.dat","a+b");
+        FILE *f2 = fopen("base.search","a+b");
         char namesW[] = {'q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m'};
         //Qvevector<string[razmer]>
 
@@ -76,14 +77,14 @@ int main()
                         element.string[j]= Snames[indexN][j];
                 }
                 element.string[razmer-1] = 0;
-                element.number = rand() % 10000;
+                element.number = rand() % 1000;
 
-                //if (i < 1000000)
+                if (i < 1000000)
                     fwrite(&element,sizeof(Record),1,f);
-                //fwrite(&(element.ID), 7, 1, f2);
+                fwrite(&(element.ID), 7, 1, f2);
 
         }
         fclose(f);
-        //fclose(f2);
+        fclose(f2);
         return 0;
 }

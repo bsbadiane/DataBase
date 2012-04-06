@@ -26,6 +26,6 @@ public:
 
 };
 
-QDataStream& operator <<(QDataStream& stream, radix::Record& record);
+//QDataStream& operator <<(QDataStream& stream, radix::Record& record);
 
 #endif // RADIX_H

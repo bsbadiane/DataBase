@@ -18,3 +18,7 @@ base/Makefile.Debug
 base/Makefile.Release
 sad
 
+/btree.out.int
+/btree.out.string
+/radix.out.int
+/radix.out.string
