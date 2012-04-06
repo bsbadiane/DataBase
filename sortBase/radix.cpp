@@ -1,5 +1,7 @@
 #include "radix.h"
 
+//TODO Фамилии вместо билиберды
+
 radix::radix()
 {
     /*
@@ -32,7 +34,7 @@ radix::radix()
 //    //qDebug() << floatValue;
 //    return floatValue;
 //}
-
+//
 
 int radix::getChar(Record recordVariable,bool longMethod, int numInt) {
     //numInt разряд
