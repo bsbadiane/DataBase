@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
+#include <QVector>
+#include <QDebug>
+#include <QFile>
 
 const int dlina = 7;
 const int razmer = 12;
@@ -16,9 +19,25 @@ int main()
 {
         FILE *f=NULL;
         //Record element;
-        f = fopen("../base.dat","a+b");
-        //FILE *f2 = fopen("base.search","a+b");
-        char names[] = {'q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m'};
+        QFile::remove("base.dat");
+        QFile::remove("base.search");
+        f = fopen("base.dat","a+b");
+        FILE *f2 = fopen("base.search","a+b");
+        char namesW[] = {'q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m'};
+        //Qvevector<string[razmer]>
+
+        QVector <QVector<char> > Snames(100);
+
+        for (int i = 0; i < 100; ++i) {
+            Snames[i].resize(razmer);
+            for (int j = 0; j<razmer-1; j++)
+            {
+                    Snames[i][j]= namesW[rand()%26];
+            }
+            Snames[i][razmer-1] = 0;
+            qDebug() << Snames[i];
+        }
+
 
         char j[dlina+1];
         for (int i = 0; i<dlina+1; i++)
@@ -52,19 +71,20 @@ int main()
                 }
                 element.ID[6] = 0;
 
+                int indexN = rand()%100;
                 for (int j = 0; j<razmer-1; j++)
                 {
-                        element.string[j]= names[rand()%26];
+                        element.string[j]= Snames[indexN][j];
                 }
                 element.string[razmer-1] = 0;
-                element.number = rand() % 10000;
+                element.number = rand() % 1000;
 
-                //if (i < 1000000)
+                if (i < 1000000)
                     fwrite(&element,sizeof(Record),1,f);
-                //fwrite(&(element.ID), 7, 1, f2);
+                fwrite(&(element.ID), 7, 1, f2);
 
         }
         fclose(f);
-        //fclose(f2);
+        fclose(f2);
         return 0;
 }

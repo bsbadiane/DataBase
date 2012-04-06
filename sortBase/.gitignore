@@ -1,4 +1,5 @@
-/Makefile
-/ui_mainwindow.h
 /debug
 /release
+/ui_mainwindow.h
+/Makefile
+
