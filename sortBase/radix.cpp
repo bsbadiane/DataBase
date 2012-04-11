@@ -14,12 +14,11 @@ radix::radix()
      */
     FILE *f=NULL;
     //Record element;
-    f = fopen("base.dat","rb");
+    f = fopen("../base.dat","rb");
     for (int i=0; i <800000;i++)
     {
         Record tempRecord;
         fread(&tempRecord,sizeof(Record),1,f);
-        //qDebug() << tempRecord.number;
         records.push_back(tempRecord);
     }
     fclose(f);
@@ -77,7 +76,6 @@ QString radix::start(bool longMethod)
         	radixRecordsTemp[getChar(radixRecords.at(k),longMethod,i)].push_back(radixRecords.at(k));
         }
 
-        //qDebug() << "Sborka";
         radixRecords.clear();
         //А теперь собирается всё в одно
         for (int j =0; j<range; j++) {

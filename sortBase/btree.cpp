@@ -14,13 +14,13 @@ btree::btree()
      */
     FILE *f=NULL;
     //Record element;
-    f = fopen("base.dat","rb");
+    f = fopen("../base.dat","rb");
     for (int i=0; i <800000;i++)
     {
         Record tempRecord;
         fread(&tempRecord,sizeof(Record),1,f);
         //qDebug() << tempRecord.number;
-        stringtofloat(tempRecord.string);
+        //stringtofloat(tempRecord.string);
         records.push_back(tempRecord);
     }
     fclose(f);
@@ -37,7 +37,7 @@ float btree::stringtofloat(char *string)
         floatValue += pow(26,11-i)*j;
         i++;
     }
-    //qDebug() << floatValue;
+    qDebug() << floatValue;
     return floatValue;
 }
 
