@@ -1,8 +1,8 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    base \
+#    base \
     DataBase \
     ChartXY \
-    sortBase \
+#    sortBase \
     townBase

@@ -14,7 +14,7 @@ radix::radix()
      */
     FILE *f=NULL;
     //Record element;
-    f = fopen("base.dat","rb");
+    f = fopen("../base.dat","rb");
     for (int i=0; i <800000;i++)
     {
         Record tempRecord;

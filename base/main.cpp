@@ -21,7 +21,7 @@ int main()
         //Record element;
         QFile::remove("base.dat");
         QFile::remove("base.search");
-        f = fopen("base.dat","a+b");
+        f = fopen("../base.dat","a+b");
         FILE *f2 = fopen("base.search","a+b");
         char namesW[] = {'q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m'};
         //Qvevector<string[razmer]>
