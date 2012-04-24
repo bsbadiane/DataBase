@@ -4,5 +4,6 @@ SUBDIRS += \
 #    base \
     DataBase \
     ChartXY \
-#    sortBase \
-    townBase
+    sortBase \
+    townBase \
+    rle

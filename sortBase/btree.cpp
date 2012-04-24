@@ -26,20 +26,20 @@ btree::btree()
     fclose(f);
 }
 
-float btree::stringtofloat(char *string)
-{
-    int i = 0,j;
-    float floatValue = 0;
-    while (string[i]!=0)
-    {
-        j= (int) string[i];
-        j = j -96;
-        floatValue += pow(26,11-i)*j;
-        i++;
-    }
-    qDebug() << floatValue;
-    return floatValue;
-}
+//float btree::stringtofloat(char *string)
+//{
+//    int i = 0,j;
+//    float floatValue = 0;
+//    while (string[i]!=0)
+//    {
+//        j= (int) string[i];
+//        j = j -96;
+//        floatValue += pow(26,11-i)*j;
+//        i++;
+//    }
+//    qDebug() << floatValue;
+//    return floatValue;
+//}
 
 QString btree::start(bool tyep1)
 {
