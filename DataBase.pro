@@ -1,9 +1,9 @@
 TEMPLATE = subdirs
 
-SUBDIRS += \
-#    base \
-    DataBase \
+# base \
+SUBDIRS += DataBase \
     ChartXY \
     sortBase \
     townBase \
-    rle
+    rle \
+    haffman
