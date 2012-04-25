@@ -12,25 +12,15 @@
 #include <cstring>
 using namespace std;
 
-
-/* Коды ошибок */
 #define NO_ERROR      0
 #define BAD_FILE_NAME 1
 #define BAD_ARGUMENT  2
 
-/* входной и выходной файлы */
 FILE *source_file, *dest_file;
-
-/*
- 'byte_stored_status' равен 'TRUE'если байт
- прочитан 'fgetc'или 'FALSE' если нет дейтвительного
- байта, не прочитано и не содержится в 'val_byte_stored'
- */
 
 int byte_stored_status = false;
 int val_byte_stored;
 
-/* псевдопроцедуры */
 
 #define end_of_data() (byte_stored_status?false:\
 	!(byte_stored_status=\
@@ -144,12 +134,10 @@ void decompress() {
 			if (!end_of_data())
 				for (i = 0; i <= header; i++)
 					write_byte(read_byte());
-			/* else INVALID FILE */
 			break;
 		case 128:
 			if (!end_of_data())
 				write_block(read_byte(), (header & 127)+2);
-			/* else INVALID FILE */
 			break;
 		}
 	}

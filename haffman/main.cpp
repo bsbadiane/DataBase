@@ -20,45 +20,12 @@ short decomp_tree[512]; // дерево декодирования
 
 FILE *inputfile, *outputfile; // входной и выходной файлы
 
-//=========================================================
-/* ФУНКЦИИ ДЛЯ КОМПРЕССИИ */
-
-//---------------------------------------------------------
-// реорганизация структкры heap
-//void reheap(unsigned short heap_entry) {
-//	unsigned short index;
-//	//unsigned short flag = 1;
-//	bool flag = true;
-//
-//	unsigned long heap_value;
-//
-//	heap_value = heap[heap_entry];
-//
-//	//используется линейная древовидная структура
-//	while ((heap_entry <= (heap_length >> 1)) && (flag)) {
-//		index = heap_entry << 1;
-//
-//		if (index < heap_length)
-//			if (frequency_count[heap[index]]
-//					>= frequency_count[heap[index + 1]])
-//				index++;
-//
-//		if (frequency_count[heap_value] < frequency_count[heap[index]])
-//			//flag--;
-//			flag = false;
-//		else {
-//			heap[heap_entry] = heap[index];
-//			heap_entry = index;
-//		}
-//	}
-//
-//	heap[heap_entry] = heap_value;
-//}
+inline
 void resort() {
-	std::sort(sorted_chars + 1, sorted_chars+char_count+1,
+	std::sort(sorted_chars + 1, sorted_chars + char_count + 1,
 			[](unsigned long first, unsigned long second) -> bool {
 				return frequency_count[first] > frequency_count[second];
-	});
+			});
 }
 //---------------------------------------------------------
 // Сжатие данных
@@ -73,7 +40,7 @@ void compress_data() {
 	short curbit = 7;
 
 	for (file_pos = 0L; file_pos < file_size; file_pos++) {
-		dvalue = (unsigned short) getc (inputfile);
+		dvalue = (unsigned short) getc(inputfile);
 		current_code = code[dvalue];
 		current_length = (unsigned short) code_length[dvalue];
 
@@ -132,34 +99,29 @@ unsigned short create_codetable() {
 //---------------------------------------------------------
 // Построение дерева кодирования
 void create_codetree() {
-	unsigned short fother_index;
-	unsigned long heap_value1, heap_value2;
+	unsigned short father_index;
+	unsigned long char_value1, char_value2;
 
 	while (char_count != 1) {
-		//heap_value = heap[1];
-		heap_value1 = sorted_chars[char_count];
-		heap_value2 = sorted_chars[char_count-1];
+
+		char_value1 = sorted_chars[char_count];
+		char_value2 = sorted_chars[char_count - 1];
 		--char_count;
-		//heap[1] = heap[heap_length--];
 
-		//reheap(1);
-		fother_index = char_count + 255;
+		father_index = char_count + 255;
 
-		frequency_count[fother_index] = frequency_count[heap_value1]
-				+ frequency_count[heap_value2];
-		father[heap_value1] = fother_index;
-		//father[heap[1]] = -findex;
-		father[heap_value2] = -fother_index;
-		sorted_chars[char_count] = fother_index;
+		frequency_count[father_index] = frequency_count[char_value1]
+				+ frequency_count[char_value2];
+		father[char_value1] = father_index;
+		father[char_value2] = -father_index;
+		sorted_chars[char_count] = father_index;
 
-		//reheap(1);
 		resort();
 	}
 
 	father[256] = 0;
 }
 //---------------------------------------------------------
-// построение heap'а по частотам встречаемости при инициализации
 void create_sorted_chars() {
 	unsigned short char_code;
 	char_count = 0;
@@ -168,8 +130,11 @@ void create_sorted_chars() {
 		if (frequency_count[char_code])
 			sorted_chars[++char_count] = (unsigned long) char_code;
 
-//	for (loop = heap_length; loop > 0; loop--)
-//		reheap(loop);
+	if (char_count == 1) {
+		frequency_count[0] = 1;
+		create_sorted_chars();
+	}
+
 	resort();
 }
 //---------------------------------------------------------
@@ -178,10 +143,8 @@ void get_frequency_count() {
 	unsigned long file_pos;
 
 	for (file_pos = 0; file_pos < file_size; file_pos++)
-		frequency_count[getc (inputfile)]++;
+		frequency_count[getc(inputfile)]++;
 }
-//=========================================================
-/* ФУНКЦИИ ДЛЯ КОМПРЕССИИ */
 
 //---------------------------------------------------------
 // Построение дерева декомпрессии
@@ -203,8 +166,8 @@ void create_decomp_tree() {
 				if (!(decomp_tree[current_index]))
 					decomp_tree[current_index] = ++current_node;
 			}
-			decomp_tree[(decomp_tree[current_index] << 1) + (code[char_code] & 1)] =
-					-char_code;
+			decomp_tree[(decomp_tree[current_index] << 1)
+					+ (code[char_code] & 1)] = -char_code;
 		}
 	}
 }
@@ -218,7 +181,7 @@ void decompress_data() {
 	unsigned long charcount = 0L;
 
 	while (charcount < file_size) {
-		curchar = (char) getc (inputfile);
+		curchar = (char) getc(inputfile);
 
 		for (bitshift = 7; bitshift >= 0; --bitshift) {
 			node_index = (node_index << 1) + ((curchar >> bitshift) & 1);
@@ -240,28 +203,34 @@ void decompress_data() {
 void Encode() {
 	fseek(inputfile, 0L, 2);
 	file_size = (unsigned long) ftell(inputfile);
-	fseek(inputfile, 0L, 0);
-	get_frequency_count();
-	create_sorted_chars();
-	create_codetree();
-	if (!create_codetable())
-		printf("Ошибка. Превышен допустимый размер кода.\n");
-	else {
-		fwrite(&file_size, sizeof(file_size), 1, outputfile);
-		fwrite(code, sizeof(unsigned short)/*2*/, 256, outputfile);
-		fwrite(code_length, sizeof(unsigned char)/*1*/, 256, outputfile);
+	if (file_size != 0) {
 		fseek(inputfile, 0L, 0);
-		compress_data();
-	};
+		get_frequency_count();
+		create_sorted_chars();
+		create_codetree();
+		if (!create_codetable())
+			printf("Ошибка. Превышен допустимый размер кода.\n");
+		else {
+			fwrite(&file_size, sizeof(file_size), 1, outputfile);
+			fwrite(code, sizeof(unsigned short)/*2*/, 256, outputfile);
+			fwrite(code_length, sizeof(unsigned char)/*1*/, 256, outputfile);
+			fseek(inputfile, 0L, 0);
+			compress_data();
+		}
+	} else {
+		fwrite(&file_size, sizeof(file_size), 1, outputfile);
+	}
 }
 //=========================================================
 // декомпрессия файла
 void Decode() {
 	fread(&file_size, sizeof(file_size), 1, inputfile);
-	fread(code, sizeof(unsigned short)/*2*/, 256, inputfile);
-	fread(code_length, sizeof(unsigned char)/*1*/, 256, inputfile);
-	create_decomp_tree();
-	decompress_data();
+	if (file_size != 0) {
+		fread(code, sizeof(unsigned short)/*2*/, 256, inputfile);
+		fread(code_length, sizeof(unsigned char)/*1*/, 256, inputfile);
+		create_decomp_tree();
+		decompress_data();
+	}
 	//fclose(ofile);
 
 }
