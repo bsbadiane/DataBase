@@ -1,4 +1,4 @@
-QT += core
+QT -= core
 QT -= gui
 TARGET = haffman
 CONFIG += console

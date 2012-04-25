@@ -53,7 +53,7 @@ write_array(array_to_write,(time_nb));	\
 }
 //=========================================================
 // Сжатие методом RLE
-void rle1encoding() {
+void compress() {
 	unsigned char byte1, byte2, frame_size, array[129];
 
 	if (!end_of_data()) {
@@ -69,9 +69,7 @@ void rle1encoding() {
 						byte2 = read_byte();
 						frame_size++;
 					}
-					if (byte1 == byte2) /* встретили
-					 последовательность
-					 одинаковых байт */
+					if (byte1 == byte2)
 					{
 						write_byte(126+frame_size);
 						write_byte(byte1);
@@ -90,9 +88,7 @@ void rle1encoding() {
 						byte2 = read_byte();
 						frame_size = 2;
 					}
-				} else /* подготовка массива для
-				 сравнений, в нем будут
-				 храниться все идентичные байты */
+				} else
 				{
 					*array = byte1;
 					array[1] = byte2;
@@ -137,7 +133,7 @@ void rle1encoding() {
 }
 //---------------------------------------------------------
 // Декомпрессия методом RLE
-void rle1decoding() {
+void decompress() {
 	unsigned char header;
 	register unsigned char i;
 
@@ -163,29 +159,29 @@ void rle1decoding() {
 int main(int argc, char* argv[]) {
 	if (argc != 4) {
 		//help();
-		printf("Bad argument\n");
+		printf("Неверные аргументы.\n");
 		exit(BAD_ARGUMENT);
 	} else if (tolower(argv[1][0]) != 'e' && tolower(argv[1][0]) != 'd') {
 		//help();
-		printf("Bad argument\n");
+		printf("Неверные аргументы.\n");
 		exit(BAD_ARGUMENT);
 	} else if ((source_file = fopen(argv[2], "rb")) == NULL) {
 		//help();
-		printf("Bad file name\n");
+		printf("Ошибка входного файла.\n");
 		exit(BAD_FILE_NAME);
 	} else if ((dest_file = fopen(argv[3], "wb")) == NULL) {
 //		/help();
-		printf("Bad file name\n");
+		printf("Ошибка выходного файла.\n");
 		exit(BAD_FILE_NAME);
 	} else {
 		if (tolower(argv[1][0]) == 'e')
-			rle1encoding();
+			compress();
 		else
-			rle1decoding();
+			decompress();
 		fclose(source_file);
 		fclose(dest_file);
 	}
-	printf("Completed.\n");
+	printf("Сделано.\n");
 	return (NO_ERROR);
 }
 
