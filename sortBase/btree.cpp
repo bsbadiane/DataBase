@@ -14,7 +14,7 @@ btree::btree()
      */
     FILE *f=NULL;
     //Record element;
-    f = fopen("../base.dat","rb");
+    f = fopen("../db_result/city.base","rb");	//TODO path
     for (int i=0; i <800000;i++)
     {
         Record tempRecord;
@@ -44,7 +44,7 @@ QString btree::start(bool tyep1)
     QString returnMessage;
     returnMessage = QString::number(timer.elapsed());
 
-    QString filename = "btree.out.";
+    QString filename = "../db_result/btree.out.";
     if (tyep) {
         filename += "int";
     } else {

@@ -17,15 +17,16 @@ QDataStream& operator <<(QDataStream& stream, Record& record);
 
 int main()
 {
-    QFile::remove("city.base");
+    QFile::remove("../db_result/city.base");
     QFile sourcesBase;
-    sourcesBase.setFileName("townBase.txt"); // копия его лежит в каталоге с исходниками
+    sourcesBase.setFileName("../db_result/townBase.txt"); // копия его лежит в каталоге с исходниками
     sourcesBase.open(QIODevice::ReadOnly);
     int randsize = 0; //17589;
     char listTowns[17000][12];
     QString qstringtemp;
     QTextStream textstream(&sourcesBase);
-    for (int i = 0; i< 17589 ; i++)
+    //for (int i = 0; i< 17589 ; i++)
+    while(!textstream.atEnd())
     {
         qstringtemp = textstream.readLine();
         if ((qstringtemp.size()>0)&&(qstringtemp.size()<11))
@@ -43,7 +44,7 @@ int main()
     sourcesBase.close();
 
     QFile binbase;
-    binbase.setFileName("city.base");
+    binbase.setFileName("../db_result/city.base");
     binbase.open(QIODevice::WriteOnly);
     QDataStream stream(&binbase);
     char j[dlina+1];
