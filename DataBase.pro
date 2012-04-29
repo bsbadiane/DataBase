@@ -6,4 +6,5 @@ SUBDIRS += DataBase \
     sortBase \
     townBase \
     rle \
-    haffman
+    haffman \
+    VSAM
