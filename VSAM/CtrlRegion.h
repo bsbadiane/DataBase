@@ -14,10 +14,15 @@
 
 namespace db {
 
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
     class CtrlRegion {
     public:
-        typedef Interval<Record, RecordNumber, int, &RecordNumber::number> Inter;
-        typedef Inter::ResultType ResultType;
+        typedef _InsertType InsertType;
+        typedef _StoreType StoreType;
+        typedef _IDType IDType;
+        typedef Interval<InsertType, StoreType, IDType, keyField> Inter;
+        typedef typename Inter::ResultType ResultType;
         typedef QVector<Inter*> SoliteType;
 
         static const int DEF_CAPACITY = 24;
@@ -28,8 +33,8 @@ namespace db {
         int getNextRegions();
         void setNextRegion(int next);
         SoliteType soliteRegion();
-        bool insertRecord(const Record& record);
-        ResultType findByKeyField(int value);
+        bool insertRecord(const InsertType& record);
+        ResultType findByKeyField(IDType value);
 
         template<class InputIterator>
         InputIterator clearAndInsertRecords(InputIterator first,
@@ -41,10 +46,13 @@ namespace db {
         int _next;
         int _intervalCapacity;
 
-        SoliteType findInsertationInterval(const Record& record);
+        SoliteType findInsertationInterval(const InsertType& record);
     };
 
-    inline CtrlRegion::CtrlRegion(int intervalCapacity, int next) {
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    inline CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::CtrlRegion(
+            int intervalCapacity, int next) {
         _next = next;
         _intervals = new Inter*[DEF_CAPACITY];
         _intervalCapacity = intervalCapacity;
@@ -68,16 +76,20 @@ namespace db {
         }
     }
 
-    inline CtrlRegion::~CtrlRegion() {
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    inline CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::~CtrlRegion() {
         for (int i = 0; i < DEF_CAPACITY; ++i) {
             delete _intervals[i];
         }
         delete _intervals;
     }
 
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
     template<class InputIterator>
-    inline InputIterator CtrlRegion::clearAndInsertRecords(InputIterator first,
-                                                           InputIterator last) {
+    inline InputIterator CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::clearAndInsertRecords(
+            InputIterator first, InputIterator last) {
         int next = 0;
         while (next != -1) {
             if (first == last) {
@@ -91,7 +103,10 @@ namespace db {
         return first;
     }
 
-    inline bool CtrlRegion::insertRecord(const Record& record) {
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    inline bool CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::insertRecord(
+            const InsertType& record) {
         bool isInserted = false;
         //найти интервал
         SoliteType intervals = findInsertationInterval(record);
@@ -108,7 +123,7 @@ namespace db {
             if (_emptyIntervals.empty()) {
                 return false;
             } else {
-                Inter::ResultType memPart = interval->soliteMemory();
+                typename Inter::ResultType memPart = interval->soliteMemory();
 
                 int next = interval->getNextInterval();
                 int newIndex = _emptyIntervals.front();
@@ -128,17 +143,26 @@ namespace db {
         }
     }
 
-    inline int CtrlRegion::getNextRegions() {
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    inline int CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::getNextRegions() {
         return _next;
     }
 
-    inline void CtrlRegion::setNextRegion(int next) {
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    inline void CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::setNextRegion(
+            int next) {
         _next = next;
     }
 
-    inline CtrlRegion::SoliteType CtrlRegion::soliteRegion() {
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    typename CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::SoliteType CtrlRegion<
+            _InsertType, _StoreType, _IDType, keyField>::soliteRegion() {
         int border = DEF_CAPACITY / 2;
-        int next = -1;;
+        int next = -1;
+        ;
         SoliteType res;
         for (int i = 0; i < border; ++i) {
             next = _intervals[next]->getNextInterval();
@@ -152,7 +176,11 @@ namespace db {
         return res;
     }
 
-    inline CtrlRegion::ResultType CtrlRegion::findByKeyField(int value) {
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    typename CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::ResultType CtrlRegion<
+            _InsertType, _StoreType, _IDType, keyField>::findByKeyField(
+            IDType value) {
         int next = 0;
         ResultType res;
         while (next != -1) {
@@ -170,8 +198,11 @@ namespace db {
         return res;
     }
 
-    inline CtrlRegion::SoliteType
-    CtrlRegion::findInsertationInterval(const Record& record) {
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    typename CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::SoliteType CtrlRegion<
+            _InsertType, _StoreType, _IDType, keyField>::findInsertationInterval(
+            const InsertType& record) {
         int next = 0;
         int maxElement;
         Inter* currentInterval;
@@ -183,7 +214,8 @@ namespace db {
             if (record.number <= maxElement) {
                 res.push_back(currentInterval);
                 next = currentInterval->getNextInterval();
-                while(next != -1 && _intervals[next]->getMaxElement() == maxElement) {
+                while (next != -1
+                        && _intervals[next]->getMaxElement() == maxElement) {
                     res.push_back(_intervals[next]);
                     next = _intervals[next]->getNextInterval();
                 }

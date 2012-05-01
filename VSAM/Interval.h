@@ -23,7 +23,6 @@ namespace db {
         typedef _InsertType InsertType;
         typedef _StoreType StoreType;
         typedef _IDType IDType;
-        //typedef
         typedef QVector<StoreType> ResultType;
 
         Interval(int capacity, int next = -1, float emptyPart = DEF_EMPTY_PART);
