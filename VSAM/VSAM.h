@@ -8,6 +8,8 @@
 #ifndef VSAM_H_
 #define VSAM_H_
 
+#include "CtrlRegion.h"
+
 namespace db {
 
     class VSAM {

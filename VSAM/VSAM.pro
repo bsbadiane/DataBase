@@ -5,9 +5,7 @@ HEADERS += Record.h \
     VSAM.h \
     CtrlRegion.h \
     Interval.h
-SOURCES += VSAM.cpp \
-    CtrlRegion.cpp
+SOURCES += VSAM.cpp
 FORMS += 
 RESOURCES += 
-
 QMAKE_CXXFLAGS += -std=c++0x
