@@ -9,7 +9,6 @@
 #define CTRLREGION_H_
 
 #include "Interval.h"
-#include "Record.h"
 #include <cassert>
 
 namespace db {
@@ -20,8 +19,9 @@ namespace db {
     public:
         typedef _InsertType InsertType;
         typedef _StoreType StoreType;
-        typedef _IDType IDType;
-        typedef Interval<InsertType, StoreType, IDType, keyField> Inter;
+        //typedef _IDType IDType;
+        typedef Interval<InsertType, StoreType, _IDType, keyField> Inter;
+        typedef typename Inter::IDType IDType;
         typedef typename Inter::ResultType ResultType;
         typedef QVector<Inter*> SoliteType;
 
@@ -35,6 +35,8 @@ namespace db {
         SoliteType soliteRegion();
         bool insertRecord(const InsertType& record);
         ResultType findByKeyField(IDType value);
+        IDType getMaxElement();
+        IDType getMinElement();
 
         template<class InputIterator>
         InputIterator clearAndInsertRecords(InputIterator first,
@@ -45,6 +47,8 @@ namespace db {
         QVector<int> _emptyIntervals;
         int _next;
         int _intervalCapacity;
+        IDType _maxStoredElement;
+        IDType _minStoredElement;
 
         SoliteType findInsertationInterval(const InsertType& record);
     };
@@ -91,13 +95,31 @@ namespace db {
     inline InputIterator CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::clearAndInsertRecords(
             InputIterator first, InputIterator last) {
         int next = 0;
+        bool firstIteration = true;
         while (next != -1) {
             if (first == last) {
                 break;
             }
 
             first = _intervals[next]->clearAndInsertRecords(first, last);
+
+            if (firstIteration) {
+                _maxStoredElement = _intervals[next]->getMaxElement();
+                _minStoredElement = _intervals[next]->getMinElement();
+                firstIteration = false;
+            } else {
+                if (Inter::greater(_intervals[next]->getMaxElement(),
+                                   _maxStoredElement)) {
+                    _maxStoredElement = _intervals[next]->getMaxElement();
+                }
+                if (Inter::less(_intervals[next]->getMinElement(),
+                                   _minStoredElement)) {
+                    _minStoredElement = _intervals[next]->getMinElement();
+                }
+            }
+
             next = _intervals[next]->getNextInterval();
+
         }
 
         return first;
@@ -139,6 +161,15 @@ namespace db {
             }
 
         } else {
+            StoreType element = record;
+            if (Inter::greater(element.*keyField, _maxStoredElement)) {
+                _maxStoredElement = element.*keyField;
+            }
+
+            if (Inter::less(element.*keyField, _minStoredElement)) {
+                _minStoredElement = element.*keyField;
+            }
+
             return true;
         }
     }
@@ -164,9 +195,15 @@ namespace db {
         int next = -1;
         ;
         SoliteType res;
-        for (int i = 0; i < border; ++i) {
+        for (int i = 0; i < border - 1; ++i) {
             next = _intervals[next]->getNextInterval();
         }
+
+        int last = next;
+        next = _intervals[last]->getNextInterval();
+        _intervals[last]->setNextInterval(-1);
+        _maxStoredElement = _intervals[last]->getMaxElement();
+
         while (next != -1) {
             res.push_back(_intervals[next]);
             _intervals[next] = new Inter(_intervalCapacity);
@@ -184,18 +221,30 @@ namespace db {
         int next = 0;
         ResultType res;
         while (next != -1) {
-            if (_intervals[next]->getMaxElement() < value) {
+            if (Inter::less(_intervals[next]->getMaxElement(), value)) {
                 continue;
             }
-
-            if (_intervals[next]->getMinElement() > value) {
+            if (Inter::greater(_intervals[next]->getMaxElement(), value)) {
                 break;
             }
-
             res += _intervals[next]->findByKeyField(value);
         }
 
         return res;
+    }
+
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::*keyField>
+    inline typename CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::IDType CtrlRegion<
+            _InsertType, _StoreType, _IDType, keyField>::getMaxElement() {
+        return _maxStoredElement;
+    }
+
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::*keyField>
+    inline typename CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::IDType CtrlRegion<
+            _InsertType, _StoreType, _IDType, keyField>::getMinElement() {
+        return _minStoredElement;
     }
 
     template<class _InsertType, class _StoreType, class _IDType,
