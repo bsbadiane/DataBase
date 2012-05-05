@@ -24,6 +24,7 @@ namespace db {
         typedef typename Inter::IDType IDType;
         typedef typename Inter::ResultType ResultType;
         typedef QVector<Inter*> SoliteType;
+        typedef QVector<typename Inter::Statistic> Statistic;
 
         static const int DEF_CAPACITY = 24;
         std::less<IDType> less;
@@ -40,6 +41,14 @@ namespace db {
         ResultType findByKeyField(IDType value);
         IDType getMaxElement();
         IDType getMinElement();
+
+        Statistic getStatistic() {
+            Statistic res;
+            for (int i = 0; i < DEF_CAPACITY; ++i) {
+                res.push_back(_intervals[i]->getStatistic());
+            }
+            return res;
+        }
 
         template<class InputIterator>
         InputIterator clearAndInsertRecords(InputIterator first,

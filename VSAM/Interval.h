@@ -51,6 +51,9 @@ namespace db {
         typedef _StoreType StoreType;
         typedef typename std::decay<_IDType>::type IDType;
         typedef QVector<StoreType> ResultType;
+        struct Statistic{
+            int busy, total;
+        };
 
         std::less<IDType> less;
         std::greater<IDType> greater;
@@ -67,6 +70,10 @@ namespace db {
         ResultType soliteMemory();
         ResultType findByKeyField(const IDType& value);
         void clear();
+
+        Statistic getStatistic() {
+            return {_last, _capacity};
+        }
 
         template<class InputIterator>
         InputIterator clearAndInsertRecords(InputIterator first,

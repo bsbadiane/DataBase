@@ -23,6 +23,7 @@ namespace db {
         typedef typename Region::InsertType InsertType;
         typedef typename Region::ResultType ResultType;
         typedef typename Region::IDType IDType;
+        typedef QVector<typename Region::Statistic> Statistic;
 
         VSAM(int intervalCapacity = 300);
         virtual ~VSAM();
@@ -33,6 +34,14 @@ namespace db {
 
         bool insertRecord(InsertType& record);
         ResultType findByKeyField(IDType value);
+
+        Statistic getStatistic() {
+            Statistic res;
+            for (Region* region : _regions) {
+                res.push_back(region->getStatistic());
+            }
+            return res;
+        }
 
         template<class InputIterator>
         void clearAndInsertRecords(InputIterator first, InputIterator last);
