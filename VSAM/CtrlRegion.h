@@ -26,9 +26,9 @@ namespace db {
         typedef QVector<Inter*> SoliteType;
 
         static const int DEF_CAPACITY = 24;
-        static const std::less<IDType> less;
-        static const std::greater<IDType> greater;
-        static const std::equal_to<IDType> equal;
+        std::less<IDType> less;
+        std::greater<IDType> greater;
+        std::equal_to<IDType> equal;
 
         CtrlRegion(int intervalCapacity, int next = -1);
         virtual ~CtrlRegion();
@@ -73,7 +73,7 @@ namespace db {
                 _intervals[i] = new Inter(intervalCapacity);
                 _emptyIntervals.push_back(i);
             } else {
-                while (nextInterval + 1 % 6 == 0) {
+                while (((nextInterval + 1) % 6) == 0) {
                     ++nextInterval;
                 }
                 _intervals[i] = new Inter(intervalCapacity, nextInterval);
@@ -114,12 +114,12 @@ namespace db {
                 _minStoredElement = _intervals[next]->getMinElement();
                 firstIteration = false;
             } else {
-                if (Inter::greater(_intervals[next]->getMaxElement(),
-                                   _maxStoredElement)) {
+                if (greater(_intervals[next]->getMaxElement(),
+                            _maxStoredElement)) {
                     _maxStoredElement = _intervals[next]->getMaxElement();
                 }
-                if (Inter::less(_intervals[next]->getMinElement(),
-                                _minStoredElement)) {
+                if (less(_intervals[next]->getMinElement(),
+                         _minStoredElement)) {
                     _minStoredElement = _intervals[next]->getMinElement();
                 }
             }
@@ -168,12 +168,11 @@ namespace db {
 
         } else {
             StoreType element = record;
-            if (Inter::greater((IDType)(element.*keyField),
-                               _maxStoredElement)) {
+            if (greater((IDType)(element.*keyField), _maxStoredElement)) {
                 _maxStoredElement = element.*keyField;        //TODO тут какая-то хрень
             }
 
-            if (Inter::less((IDType)(element.*keyField), _minStoredElement)) {
+            if (less((IDType)(element.*keyField), _minStoredElement)) {
                 _minStoredElement = element.*keyField;
             }
 
@@ -228,10 +227,10 @@ namespace db {
         int next = 0;
         ResultType res;
         while (next != -1) {
-            if (Inter::less(_intervals[next]->getMaxElement(), value)) {
+            if (less(_intervals[next]->getMaxElement(), value)) {
                 continue;
             }
-            if (Inter::greater(_intervals[next]->getMaxElement(), value)) {
+            if (greater(_intervals[next]->getMaxElement(), value)) {
                 break;
             }
             res += _intervals[next]->findByKeyField(value);
@@ -268,8 +267,8 @@ namespace db {
             currentInterval = _intervals[next];
             maxElement = currentInterval->getMaxElement();
 
-            if (Inter::less(stRecord.*keyField, maxElement)
-                    || Inter::equal(stRecord.*keyField, maxElement)) {
+            if (less(stRecord.*keyField, maxElement)
+                    || equal(stRecord.*keyField, maxElement)) {
                 res.push_back(currentInterval);
                 next = currentInterval->getNextInterval();
                 while (next != -1
@@ -287,13 +286,12 @@ namespace db {
         return res;
     }
 
-
     template<class _InsertType, class _StoreType, class _IDType,
-                _IDType _StoreType::* keyField>
+            _IDType _StoreType::* keyField>
     template<class InputIterator>
-    inline InputIterator
-    db::CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::clearAndCopyIntervals(
-            InputIterator first, InputIterator last) {
+    inline InputIterator db::CtrlRegion<_InsertType, _StoreType, _IDType,
+            keyField>::clearAndCopyIntervals(InputIterator first,
+                                             InputIterator last) {
 
         int index = 0;
         while (first != last && index < DEF_CAPACITY) {
@@ -304,9 +302,9 @@ namespace db {
         }
 
         for (int i = 0; i < index; ++i) {
-            _intervals[i]->setNextInterval(i+1);
+            _intervals[i]->setNextInterval(i + 1);
         }
-        _intervals[index-1]->setNextInterval(-1);
+        _intervals[index - 1]->setNextInterval(-1);
         for (int i = index; i < DEF_CAPACITY; ++i) {
             delete _intervals[i];
             _intervals[i] = new Inter(_intervalCapacity);
@@ -316,7 +314,6 @@ namespace db {
     }
 
 }
-
 
 /* namespace db */
 #endif /* CTRLREGION_H_ */

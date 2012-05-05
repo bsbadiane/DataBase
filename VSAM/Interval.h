@@ -52,9 +52,9 @@ namespace db {
         typedef typename std::decay<_IDType>::type IDType;
         typedef QVector<StoreType> ResultType;
 
-        static const std::less<IDType> less;
-        static const std::greater<IDType> greater;
-        static const std::equal_to<IDType> equal;
+        std::less<IDType> less;
+        std::greater<IDType> greater;
+        std::equal_to<IDType> equal;
 
         Interval(int capacity, int next = -1, float emptyPart = DEF_EMPTY_PART);
         virtual ~Interval();

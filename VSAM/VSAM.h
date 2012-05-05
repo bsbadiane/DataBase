@@ -26,7 +26,6 @@ namespace db {
         VSAM(int intervalCapacity = 300);
         virtual ~VSAM();
 
-    public:
         std::less<IDType> less;
         std::greater<IDType> greater;
         std::equal_to<IDType> equal;
