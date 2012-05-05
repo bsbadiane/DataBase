@@ -5,7 +5,6 @@
 
 QDataStream& operator <<(QDataStream& stream, radix::Record& record);
 
-//TODO Фамилии вместо билиберды
 
 radix::radix()
 {

@@ -20,21 +20,21 @@ namespace std {
 
     template<>
     struct less<char*> : public binary_function<char*, char*, bool> {
-        bool operator()(const char*& __x, const char*& __y) const {
+        bool operator()(char* __x, char* __y) const {
             return std::strcmp(__x, __y) < 0;
         }
     };
 
     template<>
     struct greater<char*> : public binary_function<char*, char*, bool> {
-        bool operator()(const char*& __x, const char*& __y) const {
+        bool operator()(char* __x, char* __y) const {
             return std::strcmp(__x, __y) > 0;
         }
     };
 
     template<>
     struct equal_to<char*> : public binary_function<char*, char*, bool> {
-        bool operator()(const char*& __x, const char*& __y) const {
+        bool operator()(char* __x, char* __y) const {
             return std::strcmp(__x, __y) == 0;
         }
     };
@@ -51,6 +51,10 @@ namespace db {
         typedef _StoreType StoreType;
         typedef typename std::decay<_IDType>::type IDType;
         typedef QVector<StoreType> ResultType;
+
+        static const std::less<IDType> less;
+        static const std::greater<IDType> greater;
+        static const std::equal_to<IDType> equal;
 
         Interval(int capacity, int next = -1, float emptyPart = DEF_EMPTY_PART);
         virtual ~Interval();
@@ -70,9 +74,6 @@ namespace db {
 
     private:
         static constexpr float DEF_EMPTY_PART = 0.1;
-        static const std::less<IDType> less;
-        static const std::greater<IDType> greater;
-        static const std::equal_to<IDType> equal;
 
         int _capacity;
         QVector<StoreType> _array;
@@ -118,12 +119,12 @@ namespace db {
 
         _maxStoredElement = (*std::max_element(
                 _array.begin(), _array.begin() + _last,
-                [this](const StoreType& first, const StoreType& second) {
+                [this](StoreType& first, StoreType& second) {
                     return less(first.*keyField, second.*keyField);        //first.*keyField < second.*keyField;
             })).*keyField;
         _minStoredElement = (*std::max_element(
                 _array.begin(), _array.begin() + _last,
-                [this](const StoreType& first, const StoreType& second) {
+                [this](StoreType& first, StoreType& second) {
                     return greater(first.*keyField, second.*keyField);        //first.*keyField > second.*keyField;
             })).*keyField;
 
@@ -191,13 +192,13 @@ namespace db {
 
         _maxStoredElement = (*std::max_element(
                 _array.begin(), _array.begin() + _last,
-                [this](const StoreType& first, const StoreType& second) {
+                [this](StoreType& first, StoreType& second) {
                     return less(first.*keyField, second.*keyField);        //first.*keyField < second.*keyField;
             })).*keyField;
 
         _minStoredElement = (*std::max_element(
                 _array.begin(), _array.begin() + _last,
-                [this](const StoreType& first, const StoreType& second) {
+                [this](StoreType& first, StoreType& second) {
                     return greater(first.*keyField, second.*keyField);        //first.*keyField > second.*keyField;
             })).*keyField;
 

@@ -10,6 +10,7 @@
 
 #include "Interval.h"
 #include <cassert>
+#include <functional>
 
 namespace db {
 
@@ -19,18 +20,20 @@ namespace db {
     public:
         typedef _InsertType InsertType;
         typedef _StoreType StoreType;
-        //typedef _IDType IDType;
         typedef Interval<InsertType, StoreType, _IDType, keyField> Inter;
         typedef typename Inter::IDType IDType;
         typedef typename Inter::ResultType ResultType;
         typedef QVector<Inter*> SoliteType;
 
         static const int DEF_CAPACITY = 24;
+        static const std::less<IDType> less;
+        static const std::greater<IDType> greater;
+        static const std::equal_to<IDType> equal;
 
         CtrlRegion(int intervalCapacity, int next = -1);
         virtual ~CtrlRegion();
 
-        int getNextRegions();
+        int getNextRegion();
         void setNextRegion(int next);
         SoliteType soliteRegion();
         bool insertRecord(const InsertType& record);
@@ -40,6 +43,9 @@ namespace db {
 
         template<class InputIterator>
         InputIterator clearAndInsertRecords(InputIterator first,
+                                            InputIterator last);
+        template<class InputIterator>
+        InputIterator clearAndCopyIntervals(InputIterator first,
                                             InputIterator last);
 
     private:
@@ -113,7 +119,7 @@ namespace db {
                     _maxStoredElement = _intervals[next]->getMaxElement();
                 }
                 if (Inter::less(_intervals[next]->getMinElement(),
-                                   _minStoredElement)) {
+                                _minStoredElement)) {
                     _minStoredElement = _intervals[next]->getMinElement();
                 }
             }
@@ -162,11 +168,12 @@ namespace db {
 
         } else {
             StoreType element = record;
-            if (Inter::greater(element.*keyField, _maxStoredElement)) {
-                _maxStoredElement = element.*keyField;
+            if (Inter::greater((IDType)(element.*keyField),
+                               _maxStoredElement)) {
+                _maxStoredElement = element.*keyField;        //TODO тут какая-то хрень
             }
 
-            if (Inter::less(element.*keyField, _minStoredElement)) {
+            if (Inter::less((IDType)(element.*keyField), _minStoredElement)) {
                 _minStoredElement = element.*keyField;
             }
 
@@ -176,7 +183,7 @@ namespace db {
 
     template<class _InsertType, class _StoreType, class _IDType,
             _IDType _StoreType::* keyField>
-    inline int CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::getNextRegions() {
+    inline int CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::getNextRegion() {
         return _next;
     }
 
@@ -253,18 +260,20 @@ namespace db {
             _InsertType, _StoreType, _IDType, keyField>::findInsertationInterval(
             const InsertType& record) {
         int next = 0;
-        int maxElement;
+        IDType maxElement;
         Inter* currentInterval;
         SoliteType res;
         while (next != -1) {
+            StoreType stRecord = record;
             currentInterval = _intervals[next];
             maxElement = currentInterval->getMaxElement();
 
-            if (record.number <= maxElement) {
+            if (Inter::less(stRecord.*keyField, maxElement)
+                    || Inter::equal(stRecord.*keyField, maxElement)) {
                 res.push_back(currentInterval);
                 next = currentInterval->getNextInterval();
                 while (next != -1
-                        && _intervals[next]->getMaxElement() == maxElement) {
+                        && equal(_intervals[next]->getMaxElement(), maxElement)) {
                     res.push_back(_intervals[next]);
                     next = _intervals[next]->getNextInterval();
                 }
@@ -278,5 +287,36 @@ namespace db {
         return res;
     }
 
-}/* namespace db */
+
+    template<class _InsertType, class _StoreType, class _IDType,
+                _IDType _StoreType::* keyField>
+    template<class InputIterator>
+    inline InputIterator
+    db::CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::clearAndCopyIntervals(
+            InputIterator first, InputIterator last) {
+
+        int index = 0;
+        while (first != last && index < DEF_CAPACITY) {
+            delete _intervals[index];
+            _intervals[index] = *first;
+            ++index;
+            ++first;
+        }
+
+        for (int i = 0; i < index; ++i) {
+            _intervals[i]->setNextInterval(i+1);
+        }
+        _intervals[index-1]->setNextInterval(-1);
+        for (int i = index; i < DEF_CAPACITY; ++i) {
+            delete _intervals[i];
+            _intervals[i] = new Inter(_intervalCapacity);
+        }
+
+        return first;
+    }
+
+}
+
+
+/* namespace db */
 #endif /* CTRLREGION_H_ */

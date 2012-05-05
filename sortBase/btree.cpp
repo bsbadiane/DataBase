@@ -14,7 +14,7 @@ btree::btree()
      */
     FILE *f=NULL;
     //Record element;
-    f = fopen("../db_result/city.base","rb");	//TODO path
+    f = fopen("../db_result/city.base","rb");
     for (int i=0; i <800000;i++)
     {
         Record tempRecord;
