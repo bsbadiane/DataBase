@@ -82,6 +82,20 @@ namespace db {
         IDType _minStoredElement;
         float _emptyPart;
         int _last;
+
+        void updateMinMax() {
+            _maxStoredElement = (*std::max_element(
+                    _array.begin(), _array.begin() + _last,
+                    [this](StoreType& first, StoreType& second) {
+                        return less(first.*keyField, second.*keyField);        //first.*keyField < second.*keyField;
+                })).*keyField;
+
+            _minStoredElement = (*std::max_element(
+                    _array.begin(), _array.begin() + _last,
+                    [this](StoreType& first, StoreType& second) {
+                        return greater(first.*keyField, second.*keyField);        //first.*keyField > second.*keyField;
+                })).*keyField;
+        }
     };
 
     template<class _InsertType, class _StoreType, class _IDType,
@@ -112,21 +126,23 @@ namespace db {
             _array[i] = *first;
             ++first;
             if (first == last) {
-                break;
                 _last = i + 1;
+                break;
             }
         }
 
-        _maxStoredElement = (*std::max_element(
-                _array.begin(), _array.begin() + _last,
-                [this](StoreType& first, StoreType& second) {
-                    return less(first.*keyField, second.*keyField);        //first.*keyField < second.*keyField;
-            })).*keyField;
-        _minStoredElement = (*std::max_element(
-                _array.begin(), _array.begin() + _last,
-                [this](StoreType& first, StoreType& second) {
-                    return greater(first.*keyField, second.*keyField);        //first.*keyField > second.*keyField;
-            })).*keyField;
+//        _maxStoredElement = (*std::max_element(
+//                _array.begin(), _array.begin() + _last,
+//                [this](StoreType& first, StoreType& second) {
+//                    return less(first.*keyField, second.*keyField);        //first.*keyField < second.*keyField;
+//            })).*keyField;
+//
+//        _minStoredElement = (*std::max_element(
+//                _array.begin(), _array.begin() + _last,
+//                [this](StoreType& first, StoreType& second) {
+//                    return greater(first.*keyField, second.*keyField);        //first.*keyField > second.*keyField;
+//            })).*keyField;
+        updateMinMax();
 
         return first;
     }
@@ -138,13 +154,27 @@ namespace db {
         if (_last >= _capacity) {
             return false;
         } else {
+            StoreType stRecord = record;
             auto before = std::find_if(
-                    _array.begin(), _array.end(),
-                    [&record](const StoreType& r) -> bool {
-                        return r.*keyField > ((StoreType)record).*keyField;
-                    });
+                    _array.begin(), _array.begin() + _last,
+                    [this, &stRecord](StoreType& r) -> bool {
+                        return greater(r.*keyField, stRecord.*keyField);        //r.*keyField > ((StoreType)record).*keyField;
+                });
             _array.insert(before, record);
             ++_last;
+
+//            _maxStoredElement = (*std::max_element(
+//                    _array.begin(), _array.begin() + _last,
+//                    [this](StoreType& first, StoreType& second) {
+//                        return less(first.*keyField, second.*keyField);        //first.*keyField < second.*keyField;
+//                })).*keyField;
+//
+//            _minStoredElement = (*std::max_element(
+//                    _array.begin(), _array.begin() + _last,
+//                    [this](StoreType& first, StoreType& second) {
+//                        return greater(first.*keyField, second.*keyField);        //first.*keyField > second.*keyField;
+//                })).*keyField;
+            updateMinMax();
 
             return true;
         }
@@ -185,22 +215,23 @@ namespace db {
             _InsertType, _StoreType, _IDType, keyField>::soliteMemory() {
         ResultType result;
         int border = _last / 2;
-        for (int i = border; border < _last; ++border) {
+        for (int i = border; i < _last; ++i) {
             result.push_back(_array[i]);
         }
         _last = border;
 
-        _maxStoredElement = (*std::max_element(
-                _array.begin(), _array.begin() + _last,
-                [this](StoreType& first, StoreType& second) {
-                    return less(first.*keyField, second.*keyField);        //first.*keyField < second.*keyField;
-            })).*keyField;
-
-        _minStoredElement = (*std::max_element(
-                _array.begin(), _array.begin() + _last,
-                [this](StoreType& first, StoreType& second) {
-                    return greater(first.*keyField, second.*keyField);        //first.*keyField > second.*keyField;
-            })).*keyField;
+//        _maxStoredElement = (*std::max_element(
+//                _array.begin(), _array.begin() + _last,
+//                [this](StoreType& first, StoreType& second) {
+//                    return less(first.*keyField, second.*keyField);        //first.*keyField < second.*keyField;
+//            })).*keyField;
+//
+//        _minStoredElement = (*std::max_element(
+//                _array.begin(), _array.begin() + _last,
+//                [this](StoreType& first, StoreType& second) {
+//                    return greater(first.*keyField, second.*keyField);        //first.*keyField > second.*keyField;
+//            })).*keyField;
+        updateMinMax();
 
         return result;
     }

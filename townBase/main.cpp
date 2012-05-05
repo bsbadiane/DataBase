@@ -85,7 +85,7 @@ int main()
                 element.string[j]= listTowns[indexN][j];
             }
             element.string[razmer-1] = 0;
-            element.number = rand() % 1000;
+            element.number = rand() % 100;
 
             stream << element;
             //qDebug() << element.ID << element.string << element.number;

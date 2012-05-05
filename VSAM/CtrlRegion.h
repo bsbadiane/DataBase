@@ -57,6 +57,28 @@ namespace db {
         IDType _minStoredElement;
 
         SoliteType findInsertationInterval(const InsertType& record);
+        void updateMaxMin() {
+            int next = 0;
+            bool firstIteration = true;
+            while (next != -1) {
+                if (firstIteration) {
+                    _maxStoredElement = _intervals[next]->getMaxElement();
+                    _minStoredElement = _intervals[next]->getMinElement();
+                    firstIteration = false;
+                } else {
+                    if (greater(_intervals[next]->getMaxElement(),
+                                _maxStoredElement)) {
+                        _maxStoredElement = _intervals[next]->getMaxElement();
+                    }
+                    if (less(_intervals[next]->getMinElement(),
+                             _minStoredElement)) {
+                        _minStoredElement = _intervals[next]->getMinElement();
+                    }
+                }
+
+                next = _intervals[next]->getNextInterval();
+            }
+        }
     };
 
     template<class _InsertType, class _StoreType, class _IDType,
@@ -156,25 +178,44 @@ namespace db {
                 int next = interval->getNextInterval();
                 int newIndex = _emptyIntervals.front();
                 Inter* dest = _intervals[newIndex];
-                interval->setNextInterval(newIndex);
+                interval->setNextInterval(newIndex);        //fixme bug hear
                 dest->setNextInterval(next);
                 _emptyIntervals.pop_front();
 
                 dest->clearAndInsertRecords(memPart.begin(), memPart.end());
 
+                updateMaxMin();
                 //еще раз вставить
                 return insertRecord(record);
             }
 
         } else {
-            StoreType element = record;
-            if (greater((IDType)(element.*keyField), _maxStoredElement)) {
-                _maxStoredElement = element.*keyField;        //TODO тут какая-то хрень
-            }
-
-            if (less((IDType)(element.*keyField), _minStoredElement)) {
-                _minStoredElement = element.*keyField;
-            }
+//            StoreType element = record;
+//            if (greater((IDType)(element.*keyField), _maxStoredElement)) {
+//                _maxStoredElement = element.*keyField;        //TODO тут какая-то хрень
+//            }
+//
+//            if (less((IDType)(element.*keyField), _minStoredElement)) {
+//                _minStoredElement = element.*keyField;
+//            }
+            /*int next = 0;
+             bool firstIteration = true;
+             while (next != 0) {
+             if (firstIteration) {
+             _maxStoredElement = _intervals[next]->getMaxElement();
+             _minStoredElement = _intervals[next]->getMinElement();
+             } else {
+             if (greater(_intervals[next]->getMaxElement(),
+             _maxStoredElement)) {
+             _maxStoredElement = _intervals[next]->getMaxElement();
+             }
+             if (less(_intervals[next]->getMinElement(),
+             _minStoredElement)) {
+             _minStoredElement = _intervals[next]->getMinElement();
+             }
+             }
+             }*/
+            updateMaxMin();
 
             return true;
         }
@@ -198,8 +239,8 @@ namespace db {
     typename CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::SoliteType CtrlRegion<
             _InsertType, _StoreType, _IDType, keyField>::soliteRegion() {
         int border = DEF_CAPACITY / 2;
-        int next = -1;
-        ;
+        int next = 0;
+
         SoliteType res;
         for (int i = 0; i < border - 1; ++i) {
             next = _intervals[next]->getNextInterval();
@@ -211,10 +252,15 @@ namespace db {
         _maxStoredElement = _intervals[last]->getMaxElement();
 
         while (next != -1) {
-            res.push_back(_intervals[next]);
-            _intervals[next] = new Inter(_intervalCapacity);
-            next = _intervals[next]->getNextInterval();
+            int current = next;
+            next = _intervals[current]->getNextInterval();
+            res.push_back(_intervals[current]);
+            _intervals[current] = new Inter(_intervalCapacity);
+            _emptyIntervals.push_back(current);
+            //next = _intervals[next]->getNextInterval();
         }
+
+        updateMaxMin();
 
         return res;
     }
@@ -228,12 +274,15 @@ namespace db {
         ResultType res;
         while (next != -1) {
             if (less(_intervals[next]->getMaxElement(), value)) {
+                next = _intervals[next]->getNextInterval();
                 continue;
             }
-            if (greater(_intervals[next]->getMaxElement(), value)) {
+            if (greater(_intervals[next]->getMinElement(), value)) {
                 break;
             }
             res += _intervals[next]->findByKeyField(value);
+
+            next = _intervals[next]->getNextInterval();
         }
 
         return res;
@@ -293,6 +342,7 @@ namespace db {
             keyField>::clearAndCopyIntervals(InputIterator first,
                                              InputIterator last) {
 
+        _emptyIntervals.clear();
         int index = 0;
         while (first != last && index < DEF_CAPACITY) {
             delete _intervals[index];
@@ -308,7 +358,10 @@ namespace db {
         for (int i = index; i < DEF_CAPACITY; ++i) {
             delete _intervals[i];
             _intervals[i] = new Inter(_intervalCapacity);
+            _emptyIntervals.push_back(i);
         }
+
+        updateMaxMin();
 
         return first;
     }

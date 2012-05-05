@@ -15,10 +15,11 @@
 
 namespace db {
 
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
     class VSAM {
     public:
-        typedef CtrlRegion<Record, RecordString, decltype(RecordString::string),
-                &RecordString::string> Region;
+        typedef CtrlRegion<_InsertType, _StoreType, _IDType, keyField> Region;
         typedef typename Region::InsertType InsertType;
         typedef typename Region::ResultType ResultType;
         typedef typename Region::IDType IDType;
@@ -43,17 +44,25 @@ namespace db {
         QVector<Region*> findInsertRegions(InsertType& record);
     };
 
-    inline db::VSAM::VSAM(int intervalCapacity) {
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    inline db::VSAM<_InsertType, _StoreType, _IDType, keyField>::VSAM(
+            int intervalCapacity) {
         _intervalCapacity = intervalCapacity;
     }
 
-    inline db::VSAM::~VSAM() {
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    inline db::VSAM<_InsertType, _StoreType, _IDType, keyField>::~VSAM() {
         for (auto region : _regions) {
             delete region;
         }
     }
 
-    inline bool db::VSAM::insertRecord(InsertType& record) {
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    inline bool db::VSAM<_InsertType, _StoreType, _IDType, keyField>::insertRecord(
+            InsertType& record) {
         bool inserted = false;
         QVector<Region*> insertRegions = findInsertRegions(record);
 
@@ -67,7 +76,7 @@ namespace db {
         if (!inserted) {
             Region* r = insertRegions[0];
 
-            Region::SoliteType intervals = r->soliteRegion();
+            typename Region::SoliteType intervals = r->soliteRegion();
             _regions.push_back(new Region(_intervalCapacity));
             _regions.back()->clearAndCopyIntervals(intervals.begin(),
                                                    intervals.end());
@@ -81,18 +90,22 @@ namespace db {
         }
     }
 
-    QVector<VSAM::Region*> VSAM::findInsertRegions(InsertType& record) {
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    QVector<typename VSAM<_InsertType, _StoreType, _IDType, keyField>::Region*> VSAM<
+            _InsertType, _StoreType, _IDType, keyField>::findInsertRegions(
+            InsertType& record) {
         int next = 0;
         IDType maxElement;
         Region* currentRegion;
         QVector<Region*> res;
         while (next != -1) {
-            Region::StoreType stRecord = record;
+            typename Region::StoreType stRecord = record;
             currentRegion = _regions[next];
             maxElement = currentRegion->getMaxElement();
 
-            if (less(stRecord.string, maxElement)
-                    || equal(stRecord.string, maxElement)) {
+            if (less(stRecord.*keyField, maxElement)
+                    || equal(stRecord.*keyField, maxElement)) {
                 res.push_back(currentRegion);
                 next = currentRegion->getNextRegion();
                 while (next != -1
@@ -110,25 +123,34 @@ namespace db {
         return res;
     }
 
-    inline db::VSAM::ResultType db::VSAM::findByKeyField(IDType value) {
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    inline typename db::VSAM<_InsertType, _StoreType, _IDType, keyField>::ResultType
+    db::VSAM<_InsertType, _StoreType, _IDType, keyField>::findByKeyField(
+            IDType value) {
         int next = 0;
         ResultType res;
         while (next != -1) {
             if (less(_regions[next]->getMaxElement(), value)) {
+                next = _regions[next]->getNextRegion();
                 continue;
             }
-            if (greater(_regions[next]->getMaxElement(), value)) {
+            if (greater(_regions[next]->getMinElement(), value)) {
                 break;
             }
             res += _regions[next]->findByKeyField(value);
+
+            next = _regions[next]->getNextRegion();
         }
 
         return res;
     }
 
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
     template<class InputIterator>
-    inline void db::VSAM::clearAndInsertRecords(InputIterator first,
-                                                InputIterator last) {
+    inline void db::VSAM<_InsertType, _StoreType, _IDType, keyField>::clearAndInsertRecords(
+            InputIterator first, InputIterator last) {
         for (Region* r : _regions) {
             delete r;
         }
@@ -140,7 +162,7 @@ namespace db {
         }
 
         for (int i = 0; i < _regions.size(); ++i) {
-            _regions[i]->setNextRegion(i+1);
+            _regions[i]->setNextRegion(i + 1);
         }
         _regions.back()->setNextRegion(-1);
     }
