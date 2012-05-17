@@ -62,6 +62,8 @@ void MainWindow::on_pushButton_clicked()
         throw;
     }
 
+    base->searchByID()
+
 
     //Надо проинициализировать два VSAMa. Одни для чисел, второй для строк.
     std::ifstream inputInt;
