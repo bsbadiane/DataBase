@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "../DataBase/DataBase.h"
+#include "../DataBase/Hashers/CloserHasher.h"
+
+
 /*
 Надо проинициализировать два VSAMa. Одни для чисел, второй для строк. Потом занести туда отсортированные по ключу записи из файлов прошлой лабы. после этого по одному элементу заносить оставшиеся 200000.
 Потом уже надо делать форму. В ней два поля ввода. Одно для числа, второе для строки, и кнопка "НАйти". Потом в одном VSAM искать по строке, во втором по числу. Получится два множетсва найденных записей. Нужно найти их пересечение, а потом найти их по ID в базе из первой лабы и вывести все это н аэкран ввиде таблички.*/
@@ -16,17 +18,12 @@ namespace db {
     }
 }
 
-typedef db::VSAM<db::Record, db::RecordString, decltype(db::RecordString::string),
-        &db::RecordString::string> StrVSAM;
-
-typedef db::VSAM<db::Record, db::RecordNumber, int,
-        &db::RecordNumber::number> NumVSAM;
-
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    base = NULL;
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);
     ui->label->setText("HI. LAB BD");
@@ -46,6 +43,16 @@ MainWindow::~MainWindow()
 //Нужно найти их пересечение, а потом найти их по ID в базе из первой лабы и вывести все это н аэкран ввиде таблички.
 void MainWindow::on_Button_go_clicked()
 {
+//    //поля
+//    StrVSAM::ResultType r2 = vsamString.findByKeyField("town");
+//    NumVSAM::ResultType r1 = vsamInt.findByKeyField(num);
+
+//    //получіть перересеченіе ІД
+//    //circle
+//    db::Record* r = base->searchByID("ID");
+//    r->
+
+//            //предусмотреть вывод номера управляюўего регіона і інтервала.
 
 }
 
@@ -53,7 +60,7 @@ void MainWindow::on_pushButton_clicked()
 {
     ui->label->setText("WAIT.......");
 
-    db::DataBase* base = NULL;
+
 
     try {
         base = new db::DataBase("../db_result/base.db", 1200000, 10000, db::CloserHasher::build);
@@ -62,19 +69,17 @@ void MainWindow::on_pushButton_clicked()
         throw;
     }
 
-    base->searchByID()
-
 
     //Надо проинициализировать два VSAMa. Одни для чисел, второй для строк.
     std::ifstream inputInt;
     inputInt.open("../db_result/radix.out.int", ios::in | ios::binary);
-    NumVSAM vsamInt;
+
     istream_iterator<db::Record> firstInt(inputInt), lastInt;
     vsamInt.clearAndInsertRecords(firstInt, lastInt);
 
     std::ifstream inputString;
     inputString.open("../db_result/radix.out.string", ios::in | ios::binary);
-    StrVSAM vsamString;
+
     istream_iterator<db::Record> firstString(inputString), lastString;
     vsamString.clearAndInsertRecords(firstString, lastString);
 

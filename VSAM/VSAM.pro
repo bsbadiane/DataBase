@@ -6,7 +6,9 @@ HEADERS += VSAM.h \
     Interval.h \
     mainwindow.h
 SOURCES += main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    ../DataBase/DataBase.cpp \
+    ../DataBase/Hashers/CloserHasher.cpp
 FORMS += \ 
     mainwindow.ui
 RESOURCES += 
