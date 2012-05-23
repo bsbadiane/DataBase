@@ -148,6 +148,8 @@ void MainWindow::on_pushButton_2_clicked()
     //    //circle
     //    db::Record* r = base->searchByID("ID");
     //    r->
+    ui->tableWidget->setColumnCount(3);
+    ui->tableWidget->setRowCount(intersection.size());
     QTableWidgetItem *newItem = new QTableWidgetItem;
     for (int i = 0;i < intersection.size(); i++)
     {
