@@ -41,11 +41,6 @@ namespace db {
             throw new std::invalid_argument("Invalid number of packages");
         }
 
-        /*int* metaPackages = reinterpret_cast<int*>(file->map(
-        		(qint64)sizeof(int), (qint64)sizeof(int) * checkNumber));
-        if (metaPackages == NULL) {
-            throw new std::runtime_error("Cann't map DB.");
-        }*/
 #ifdef DEBUG
         for (int i = 0; i < checkNumber; ++i) {
             qDebug() << metaPackages[i];

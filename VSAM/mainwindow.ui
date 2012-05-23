@@ -20,6 +20,57 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <widget class="QWidget" name="page_2">
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="tab">
+           <attribute name="title">
+            <string>Поик в базе</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="0">
+             <widget class="QLineEdit" name="stringInput"/>
+            </item>
+            <item row="0" column="2">
+             <widget class="QPushButton" name="pushButton_2">
+              <property name="text">
+               <string>DO IT</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="3">
+             <widget class="QTableWidget" name="tableWidget"/>
+            </item>
+            <item row="0" column="1">
+             <widget class="QSpinBox" name="numberInput">
+              <property name="minimumSize">
+               <size>
+                <width>240</width>
+                <height>23</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_2">
+           <attribute name="title">
+            <string>Просмотр VSAM (строки)</string>
+           </attribute>
+          </widget>
+          <widget class="QWidget" name="tab_3">
+           <attribute name="title">
+            <string>Просмотр VSAM (числа)</string>
+           </attribute>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="1">
@@ -100,33 +151,6 @@
            </size>
           </property>
          </spacer>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="page_2">
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
-         <widget class="QLineEdit" name="lineEdit_string"/>
-        </item>
-        <item row="0" column="1">
-         <widget class="QSpinBox" name="spinBox">
-          <property name="minimumSize">
-           <size>
-            <width>240</width>
-            <height>23</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QPushButton" name="pushButton_2">
-          <property name="text">
-           <string>DO IT</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="3">
-         <widget class="QTableWidget" name="tableWidget"/>
         </item>
        </layout>
       </widget>
