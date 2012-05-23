@@ -41,6 +41,7 @@ namespace db {
         ResultType findByKeyField(IDType value);
         IDType getMaxElement();
         IDType getMinElement();
+        ResultType getInterval(int interval);
 
         Statistic getStatistic() {
             Statistic res;
@@ -375,6 +376,17 @@ namespace db {
         return first;
     }
 
+    template<class _InsertType, class _StoreType, class _IDType,
+            _IDType _StoreType::* keyField>
+    typename db::CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::ResultType
+    db::CtrlRegion<_InsertType, _StoreType, _IDType, keyField>::getInterval(
+            int interval) {
+        if (interval >= DEF_CAPACITY) {
+            return ResultType();
+        } else {
+            return _intervals[interval]->get();
+        }
+    }
 }
 
 /* namespace db */

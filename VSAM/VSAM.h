@@ -34,6 +34,8 @@ namespace db {
 
         bool insertRecord(InsertType& record);
         ResultType findByKeyField(IDType value);
+        ResultType getInterval(int region, int interval);
+        int getRegionsNumber();
 
         Statistic getStatistic() {
             Statistic res;
@@ -174,6 +176,23 @@ namespace db {
             _regions[i]->setNextRegion(i + 1);
         }
         _regions.back()->setNextRegion(-1);
+    }
+
+    template<class _InsertType, class _StoreType, class _IDType,
+                _IDType _StoreType::* keyField>
+    typename db::VSAM<_InsertType, _StoreType, _IDType, keyField>::ResultType
+    db::VSAM<_InsertType, _StoreType, _IDType, keyField>::getInterval(int region, int interval) {
+        if (region >= _regions.size()) {
+            return ResultType();
+        } else {
+            return _regions[region]->getInterval(interval);
+        }
+    }
+
+    template<class _InsertType, class _StoreType, class _IDType,
+                _IDType _StoreType::* keyField>
+    int db::VSAM<_InsertType, _StoreType, _IDType, keyField>::getRegionsNumber() {
+        return _regions.size();
     }
 }/* namespace db */
 #endif /* VSAM_H_ */

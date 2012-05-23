@@ -70,6 +70,7 @@ namespace db {
         ResultType soliteMemory();
         ResultType findByKeyField(const IDType& value);
         void clear();
+        ResultType get();
 
         Statistic getStatistic() {
             return {_last, _capacity};
@@ -262,6 +263,13 @@ namespace db {
     inline void Interval<_InsertType, _StoreType, _IDType, keyField>::clear() {
         _last = 0;
         _maxStoredElement = IDType();
+    }
+
+    template<class _InsertType, class _StoreType, class _IDType,
+                _IDType _StoreType::*keyField>
+    typename Interval<_InsertType, _StoreType, _IDType, keyField>::ResultType
+    Interval<_InsertType, _StoreType, _IDType, keyField>::get() {
+        return _array;
     }
 }
 

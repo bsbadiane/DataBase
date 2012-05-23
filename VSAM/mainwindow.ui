@@ -22,10 +22,10 @@
       </property>
       <widget class="QWidget" name="page_2">
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
+        <item row="1" column="0">
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="tab">
            <attribute name="title">
@@ -53,6 +53,9 @@
                 <height>23</height>
                </size>
               </property>
+              <property name="maximum">
+               <number>999</number>
+              </property>
              </widget>
             </item>
            </layout>
@@ -61,11 +64,105 @@
            <attribute name="title">
             <string>Просмотр VSAM (строки)</string>
            </attribute>
+           <layout class="QGridLayout" name="gridLayout_5">
+            <item row="1" column="1">
+             <widget class="QSpinBox" name="StrRegion">
+              <property name="maximum">
+               <number>999</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QSpinBox" name="StrInter">
+              <property name="maximum">
+               <number>999</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="QPushButton" name="pushButton_3">
+              <property name="text">
+               <string>Показать</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="5">
+             <widget class="QTableWidget" name="stringTable"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Управляемая область</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Интервал</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" colspan="5">
+             <widget class="QLabel" name="TotalRegionsStr">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </widget>
           <widget class="QWidget" name="tab_3">
            <attribute name="title">
             <string>Просмотр VSAM (числа)</string>
            </attribute>
+           <layout class="QGridLayout" name="gridLayout_6">
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Управляемая область</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QSpinBox" name="numRegion">
+              <property name="maximum">
+               <number>999</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="label_4">
+              <property name="text">
+               <string>Интервал</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QSpinBox" name="numInter">
+              <property name="maximum">
+               <number>999</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="QPushButton" name="pushButton_4">
+              <property name="text">
+               <string>Показать</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" colspan="5">
+             <widget class="QLabel" name="TotalRegionsNum">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="5">
+             <widget class="QTableWidget" name="numTable"/>
+            </item>
+           </layout>
           </widget>
          </widget>
         </item>
@@ -169,6 +266,22 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>stringInput</tabstop>
+  <tabstop>numberInput</tabstop>
+  <tabstop>pushButton_2</tabstop>
+  <tabstop>tableWidget</tabstop>
+  <tabstop>StrRegion</tabstop>
+  <tabstop>StrInter</tabstop>
+  <tabstop>pushButton_3</tabstop>
+  <tabstop>numInter</tabstop>
+  <tabstop>pushButton</tabstop>
+  <tabstop>stringTable</tabstop>
+  <tabstop>numRegion</tabstop>
+  <tabstop>pushButton_4</tabstop>
+  <tabstop>numTable</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

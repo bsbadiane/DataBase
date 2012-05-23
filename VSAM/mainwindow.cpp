@@ -54,6 +54,13 @@ MainWindow::MainWindow(QWidget *parent) :
     for (int i = 0; i < 200000; ++i) {
         vsamString.insertRecord(records[i]);
     }
+
+    ui->TotalRegionsStr->setText(
+            "Общее число областей: "
+                    + QString::number(vsamString.getRegionsNumber()));
+    ui->TotalRegionsNum->setText(
+            "Общее число областей: "
+                    + QString::number(vsamInt.getRegionsNumber()));
 }
 
 MainWindow::~MainWindow() {
@@ -101,14 +108,6 @@ void MainWindow::on_pushButton_2_clicked() {
             string.toAscii().data());
     NumVSAM::ResultType numRes = vsamInt.findByKeyField(number);
 
-    for (auto rec : strRes) {
-        qDebug() << rec.ID << rec.string;
-    }
-
-    for (auto rec : numRes) {
-        qDebug() << rec.ID << rec.number;
-    }
-
     QVector<QString> IDs = getIDs(strRes, numRes);
 
     ui->tableWidget->setColumnCount(3);
@@ -127,6 +126,7 @@ void MainWindow::on_pushButton_2_clicked() {
         ui->tableWidget->setItem(i, 2, item);
         delete record;
     }
+
 }
 
 QVector<QString> MainWindow::getIDs(const StrVSAM::ResultType& strRes,
@@ -143,4 +143,40 @@ QVector<QString> MainWindow::getIDs(const StrVSAM::ResultType& strRes,
     }
 
     return res;
+}
+
+void MainWindow::on_pushButton_3_clicked() {
+    int region = ui->StrRegion->value();
+    int interval = ui->StrInter->value();
+    StrVSAM::ResultType res = vsamString.getInterval(region, interval);
+
+    ui->stringTable->setRowCount(res.size());
+    ui->stringTable->setColumnCount(2);
+
+    for (int i = 0; i < res.size(); ++i) {
+        QTableWidgetItem* item;
+
+        item = new QTableWidgetItem(res[i].ID);
+        ui->stringTable->setItem(i, 0, item);
+        item = new QTableWidgetItem(res[i].string);
+        ui->stringTable->setItem(i, 1, item);
+    }
+}
+
+void MainWindow::on_pushButton_4_clicked() {
+    int region = ui->numRegion->value();
+    int interval = ui->numInter->value();
+    NumVSAM::ResultType res = vsamInt.getInterval(region, interval);
+
+    ui->numTable->setRowCount(res.size());
+    ui->numTable->setColumnCount(2);
+
+    for (int i = 0; i < res.size(); ++i) {
+        QTableWidgetItem* item;
+
+        item = new QTableWidgetItem(res[i].ID);
+        ui->numTable->setItem(i, 0, item);
+        item = new QTableWidgetItem(QString::number(res[i].number));
+        ui->numTable->setItem(i, 1, item);
+    }
 }
