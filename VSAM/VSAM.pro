@@ -1,15 +1,22 @@
-TEMPLATE = app
+#-------------------------------------------------
+#
+# Project created by QtCreator 2012-05-23T03:00:21
+#
+#-------------------------------------------------
+
+QT       += core gui
+
 TARGET = VSAM
-QT += core
-HEADERS += VSAM.h \
+TEMPLATE = app
+
+
+SOURCES += main.cpp\
+        mainwindow.cpp
+
+HEADERS  += mainwindow.h \
     CtrlRegion.h \
     Interval.h \
-    mainwindow.h
-SOURCES += main.cpp \
-    mainwindow.cpp \
-    ../DataBase/DataBase.cpp \
-    ../DataBase/Hashers/CloserHasher.cpp
-FORMS += \ 
-    mainwindow.ui
-RESOURCES += 
+    VSAM.h
+
+FORMS    += mainwindow.ui
 QMAKE_CXXFLAGS += -std=c++0x

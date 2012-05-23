@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "../DataBase/Hashers/CloserHasher.h"
 
 
 /*
@@ -19,21 +18,30 @@ namespace db {
 }
 
 
+typedef db::VSAM<db::Record, db::RecordString, decltype(db::RecordString::string),
+        &db::RecordString::string> StrVSAM;
+
+typedef db::VSAM<db::Record, db::RecordNumber, int,
+        &db::RecordNumber::number> NumVSAM;
+
+NumVSAM vsamInt;
+StrVSAM vsamString;
+db::DataBase* base;
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    base = NULL;
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);
     ui->label->setText("HI. LAB BD");
-    ui->lineEdit_int->setText("123456");
+    ui->spinBox->setValue(123456);
     ui->lineEdit_string->setText("Abramtsevo");
 }
 
 MainWindow::~MainWindow()
 {
-    delete base;
     delete ui;
 }
 
@@ -41,21 +49,6 @@ MainWindow::~MainWindow()
 ////Потом в одном VSAM искать по строке, во втором по числу.
 //Получится два множетсва найденных записей.
 //Нужно найти их пересечение, а потом найти их по ID в базе из первой лабы и вывести все это н аэкран ввиде таблички.
-void MainWindow::on_Button_go_clicked()
-{
-//    //поля
-//    StrVSAM::ResultType r2 = vsamString.findByKeyField("town");
-//    NumVSAM::ResultType r1 = vsamInt.findByKeyField(num);
-
-//    //получіть перересеченіе ІД
-//    //circle
-//    db::Record* r = base->searchByID("ID");
-//    r->
-
-//            //предусмотреть вывод номера управляюўего регіона і інтервала.
-
-}
-
 void MainWindow::on_pushButton_clicked()
 {
     ui->label->setText("WAIT.......");
@@ -104,6 +97,7 @@ void MainWindow::on_pushButton_clicked()
 
 }
 
+
 //после этого по одному элементу заносить оставшиеся 200000.
 void MainWindow::twoHundredThousand()
 {
@@ -125,4 +119,48 @@ void MainWindow::twoHundredThousand()
     }
 
     fclose(f);
+}
+void MainWindow::on_pushButton_2_clicked()
+{
+    QString town = ui->lineEdit_string->text();
+    int number = ui->spinBox->value();
+    char string[12];
+    for (int i = 0; i < town.length(); i++)
+    {
+        string[i] = town[i];
+    }
+
+//    //поля
+    StrVSAM::ResultType r1 = vsamString.findByKeyField(string);
+    NumVSAM::ResultType r2 = vsamInt.findByKeyField(number);
+    QVector <db::Record> intersection;
+    for (int i = 0; i< r1.lenght;i++)
+        for (int i1 = 0; i1< r2.lenght;i1++)
+        {
+            if (r1[i] == r2[i1]) {
+                intersection.push_back(r1[i]);
+                break;
+            }
+        }
+
+
+    //    //получіть перересеченіе ІД
+    //    //circle
+    //    db::Record* r = base->searchByID("ID");
+    //    r->
+    QTableWidgetItem *newItem = new QTableWidgetItem;
+    for (int i = 0;i < intersection.size(); i++)
+    {
+        newItem->setText(intersection[i].ID);
+        ui->tableWidget->setItem(i, 0, newItem);
+        newItem->setText(intersection[i].string);
+        ui->tableWidget->setItem(i, 1, newItem);
+        newItem->setText(intersection[i].number);
+        ui->tableWidget->setItem(i, 2, newItem);
+    }
+
+
+
+//            //предусмотреть вывод номера управляюўего регіона і інтервала.
+
 }

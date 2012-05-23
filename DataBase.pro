@@ -1,10 +1,15 @@
 TEMPLATE = subdirs
 
 # base \
-SUBDIRS += DataBase \
-    ChartXY \
+#SUBDIRS += VSAM
+
+#    VSAM
+
+SUBDIRS += \
+    VSAM \
+    DataBase \
+##    ChartXY \
     sortBase \
     townBase \
-    rle \
-    haffman \
-    VSAM
+##    rle \
+##    haffman \
