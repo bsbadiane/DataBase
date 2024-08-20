@@ -1,0 +1,21 @@
+
+
+entity UtilisationCarte {
+    utilisationid Integer 
+    debutperiode LocalDate 
+    finperiode LocalDate 
+    totalnbcarte Integer 
+    totalvaleurcfa Integer 
+}
+
+entity TypeService {
+    typeserviceid Integer
+    detailsid Integer
+    description String
+    nbcarte Integer
+    valeurcfa Integer
+}
+
+relationship ManyToOne {
+UtilisationCarte to TypeService
+}
